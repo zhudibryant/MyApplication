@@ -1,0 +1,671 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/number_area"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/top_of_main"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/bu_tong_hao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="号码"
+            android:textColor="#455A64"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/bu_tong_hao_one"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_1"
+                android:button="@null"
+                android:checked="false" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/bu_tong_hao_two"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_2"
+                android:button="@null" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/bu_tong_hao_three"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_3"
+                android:button="@null" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/bu_tong_hao_four"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_4"
+                android:button="@null" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/bu_tong_hao_five"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_5"
+                android:button="@null" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/bu_tong_hao_six"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_6"
+                android:button="@null" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/he_zhi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="和值"
+            android:textColor="#455A64"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+
+        <LinearLayout
+            android:id="@+id/he_zhi_num_area"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="11"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_three"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_3"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_four"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_4"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_five"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_5"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_six"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_6"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_seven"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_7"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_eight"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_8"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_nine"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_9"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_ten"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_10"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_eleven"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_11"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_twelve"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_12"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_thirteen"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_13"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_fourteen"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_14"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_fifteen"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_15"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_sixteen"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_16"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_seventeen"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_17"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/he_zhi_eighteen"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/selector_18"
+                        android:button="@null"
+                        android:gravity="center" />
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/quick_choice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/xiao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="小"
+            android:textColor="#607D8B"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/da"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="大"
+            android:textColor="#607D8B"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="单"
+            android:textColor="#607D8B"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/shuang"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="双"
+            android:textColor="#607D8B"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/quan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="全"
+            android:textColor="#607D8B"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/qing"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="清"
+            android:textColor="#607D8B"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/san_tong_hao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="三同号"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/er_tong_hao_dan_xuan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="0dp"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="二同号"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:src="@mipmap/unchk_1" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:src="@mipmap/unchk_2" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:src="@mipmap/unchk_4" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:src="@mipmap/unchk_5" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:src="@mipmap/unchk_6" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="不同号"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:src="@mipmap/unchk_1" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:src="@mipmap/unchk_2" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:src="@mipmap/unchk_4" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:src="@mipmap/unchk_5" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:src="@mipmap/unchk_6" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/er_tong_hao_fu_xuan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="号码"
+            android:textColor="#455A64"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@mipmap/unchk_1" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@mipmap/unchk_2" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@mipmap/unchk_4" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@mipmap/unchk_5" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@mipmap/unchk_6" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/san_lian_hao_tong_xuan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="三连号"
+            android:textColor="#455A64"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp">
+
+            <CheckBox
+                android:id="@+id/san_lian_hao_tong"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/selector_tong"
+                android:button="@null" />
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>
