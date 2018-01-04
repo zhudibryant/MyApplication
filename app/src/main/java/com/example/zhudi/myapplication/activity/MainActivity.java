@@ -90,6 +90,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+
+
+
     }
 
     @Override
