@@ -33,6 +33,7 @@ import com.example.zhudi.myapplication.adapter.RecyclerAdapter;
 import com.example.zhudi.myapplication.utils.Constant;
 import com.example.zhudi.myapplication.utils.Utils;
 import com.example.zhudi.myapplication.utils.ZuHeMethod;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +53,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private LinearLayout withoutAddNum;
 
     private CheckBox buTongHaoOne, buTongHaoTwo, buTongHaoThree, buTongHaoFour, buTongHaoFive, buTongHaoSix;
+    private CheckBox erTongOne, erTongTwo, erTongThree, erTongFour, erTongFive, erTongSix;
+    private CheckBox danOne, danTwo, danThree, danFour, danFive, danSix;
     private CheckBox heZhiThree, heZhiFour, heZhiFive, heZhiSix, heZhiSeven, heZhiEight, heZhiNine, heZhiTen, heZhiEleven, heZhiTwelve, heZhiThirteen, heZhiFourteen, heZhiFifteen, heZhiSixteen, heZhiSeventeen, heZhiEighteen;
 
     private TextView Xiao, Da, Dan, Shuang, Quan, Qing;
@@ -65,16 +68,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private ImageView Delete, Cart;
 
     //每个checkbox对应的静态数字变量
-    static int ONE;
-    static int TWO;
-    static int THREE;
-    static int FOUR;
-    static int FIVE;
-    static int SIX;
+    static int ONE, TWO, THREE, FOUR, FIVE, SIX;
+    static int D_ONE, D_TWO, D_THREE, D_FOUR, D_FIVE, D_SIX;
     static int SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE, THIRTEEN, FOURTEEN, FIFTEEN, SIXTEEN, SEVENTEEN, EIGHTEEN;
 
     //单个checkbox对应的权重
-    static int WEIGHT;
+    static int WEIGHT, D_WEIGHT;
 
     static long N;
 
@@ -82,8 +81,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     static final String[] MODE = new String[]{"和值", "三同号(单选/通选)", "二同号复选", "二同号单选", "三不同号", "二不同号", "三连号通选"};
     static ArrayList<String> arrayList = new ArrayList<String>();
+    //二同号双数接收集合
+    static ArrayList doubleList = new ArrayList();
+    //二同号单数接收集合
+    static ArrayList singleList = new ArrayList();
+
     List<String> list;
     private RecyclerAdapter recyclerAdapter;
+
+    //在Toolbar显示menu必须声明的方法
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,18 +105,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void initView() {
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar_without_back_icon);
-        //toolbar.setTitle("首页");
-        //toolbar.setBackgroundColor(Color.parseColor("#2b566e"));
+        Toolbar toolbarOfMain = (Toolbar) findViewById(R.id.toolBar_without_back_icon);
         //此方法放在所有标题栏按钮事件函数的前面
-        setSupportActionBar(toolbar);
-        /*toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });*/
-
+        setSupportActionBar(toolbarOfMain);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         spinner = findViewById(R.id.spinner);
         initSpnner();
@@ -127,6 +129,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         buTongHaoFour = findViewById(R.id.bu_tong_hao_four);
         buTongHaoFive = findViewById(R.id.bu_tong_hao_five);
         buTongHaoSix = findViewById(R.id.bu_tong_hao_six);
+
+        //"二同号单选"数字控件获取
+        //获取"二同号"数字控件
+        erTongOne = findViewById(R.id.er_tong_hao_one);
+        erTongTwo = findViewById(R.id.er_tong_hao_two);
+        erTongThree = findViewById(R.id.er_tong_hao_three);
+        erTongFour = findViewById(R.id.er_tong_hao_four);
+        erTongFive = findViewById(R.id.er_tong_hao_five);
+        erTongSix = findViewById(R.id.er_tong_hao_six);
+        //获取"单号"数字控件
+        danOne = findViewById(R.id.dan_xuan_one);
+        danTwo = findViewById(R.id.dan_xuan_two);
+        danThree = findViewById(R.id.dan_xuan_three);
+        danFour = findViewById(R.id.dan_xuan_four);
+        danFive = findViewById(R.id.dan_xuan_five);
+        danSix = findViewById(R.id.dan_xuan_six);
 
         //获取"和值"数字控件
         heZhiThree = findViewById(R.id.he_zhi_three);
@@ -169,6 +187,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         buTongHaoFour.setOnCheckedChangeListener(this);
         buTongHaoFive.setOnCheckedChangeListener(this);
         buTongHaoSix.setOnCheckedChangeListener(this);
+
+        //"二同号单选"数字控件绑定onCheckChange事件
+        //为数字"二同号"控件绑定点击事件
+        erTongOne.setOnCheckedChangeListener(this);
+        erTongTwo.setOnCheckedChangeListener(this);
+        erTongThree.setOnCheckedChangeListener(this);
+        erTongFour.setOnCheckedChangeListener(this);
+        erTongFive.setOnCheckedChangeListener(this);
+        erTongSix.setOnCheckedChangeListener(this);
+        //为数字"单号"控件绑定点击事件
+        danOne.setOnCheckedChangeListener(this);
+        danTwo.setOnCheckedChangeListener(this);
+        danThree.setOnCheckedChangeListener(this);
+        danFour.setOnCheckedChangeListener(this);
+        danFive.setOnCheckedChangeListener(this);
+        danSix.setOnCheckedChangeListener(this);
 
         //为数字"和值"CheckBox控件绑定点击事件
         heZhiThree.setOnCheckedChangeListener(this);
@@ -216,7 +250,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         tipForRecycler = findViewById(R.id.tip_for_recycler);
         //设置布局管理容器
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-        //recyclerView.addItemDecoration(new DividerGridItemDecoration(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerAdapter = new RecyclerAdapter(this, list);
         recyclerView.setAdapter(recyclerAdapter);
@@ -246,29 +279,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         public boolean onMenuItemClick(MenuItem item) {
             //String msg = "";
             switch (item.getItemId()) {
-                case R.id.userInfo:
+                case R.id.toolbar_message:
                     Log.e("show", "fuck");
                     seeUserInfo();
                     break;
-                case R.id.rules:
-                    seeRules();
-                    break;
-
             }
             return true;
         }
     };
-
-    //在Toolbar显示menu必须声明的方法
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    private void seeRules() {
-        Intent seeRules = new Intent(this, RulesActivity.class);
-        startActivity(seeRules);
-    }
 
     private void seeUserInfo() {
         Intent seeUserInfo = new Intent(this, UserInfoActivity.class);
@@ -310,7 +328,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     zhuShu.setText("共0注");
                     jinE.setText("金额0元");
 
-                    Log.i("weight","weight -- " +WEIGHT);
+                    Log.i("weight", "weight -- " + WEIGHT);
                     sanTongHao.setVisibility(View.GONE);
                     quickChoice.setVisibility(View.VISIBLE);
                     heZhi.setVisibility(View.VISIBLE);
@@ -335,6 +353,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     quickChoice.setVisibility(View.GONE);
                     sanLianHaoTongXuan.setVisibility(View.GONE);
                 } else if (i == 3) {
+                    //重置weight
+                    WEIGHT = 0;
+                    D_WEIGHT = 0;
+                    //重置数字选择状态
+                    erTongOne.setChecked(false);
+                    erTongTwo.setChecked(false);
+                    erTongThree.setChecked(false);
+                    erTongFour.setChecked(false);
+                    erTongFive.setChecked(false);
+                    erTongSix.setChecked(false);
+                    danOne.setChecked(false);
+                    danTwo.setChecked(false);
+                    danThree.setChecked(false);
+                    danFour.setChecked(false);
+                    danFive.setChecked(false);
+                    danSix.setChecked(false);
+
                     erTongHaoDanXuan.setVisibility(View.VISIBLE);
                     sanTongHao.setVisibility(View.GONE);
                     buTongHao.setVisibility(View.GONE);
@@ -372,7 +407,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     erTongHaoFuXuan.setVisibility(View.GONE);
                 }
                 //在二不同号和三不同号的情况下，显示tip TextView和AddNum Button
-                if (i == 4 || i == 5) {
+                if (i == 4 || i == 5 || i == 3) {
                     tipForRecycler.setVisibility(View.VISIBLE);
                     withoutAddNum.setVisibility(View.VISIBLE);
                 } else {
@@ -600,6 +635,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (modeName.equals("二不同号") || modeName.equals("三不同号")) {
                     if (list == null) {
                         Utils.alertShort(this, "请您先组合号码");
+                    } else {
+                        //提交号码到服务器
                     }
                 }
                 break;
@@ -702,6 +739,116 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
+            case R.id.er_tong_hao_one:
+                if (b) {
+                    D_ONE = 1;
+                    D_WEIGHT = D_WEIGHT + 1;
+                } else {
+                    D_ONE = 0;
+                    D_WEIGHT = D_WEIGHT - 1;
+                }
+                break;
+            case R.id.er_tong_hao_two:
+                if (b) {
+                    D_TWO = 2;
+                    D_WEIGHT = D_WEIGHT + 1;
+                } else {
+                    D_TWO = 0;
+                    D_WEIGHT = D_WEIGHT - 1;
+                }
+                break;
+            case R.id.er_tong_hao_three:
+                if (b) {
+                    D_THREE = 3;
+                    D_WEIGHT = D_WEIGHT + 1;
+                } else {
+                    D_THREE = 0;
+                    D_WEIGHT = D_WEIGHT - 1;
+                }
+                break;
+            case R.id.er_tong_hao_four:
+                if (b) {
+                    D_FOUR = 4;
+                    D_WEIGHT = D_WEIGHT + 1;
+                } else {
+                    D_FOUR = 0;
+                    D_WEIGHT = D_WEIGHT - 1;
+                }
+                break;
+            case R.id.er_tong_hao_five:
+                if (b) {
+                    D_FIVE = 5;
+                    D_WEIGHT = D_WEIGHT + 1;
+                } else {
+                    D_FIVE = 0;
+                    D_WEIGHT = D_WEIGHT - 1;
+                }
+                break;
+            case R.id.er_tong_hao_six:
+                if (b) {
+                    D_SIX = 6;
+                    D_WEIGHT = D_WEIGHT + 1;
+                } else {
+                    D_SIX = 0;
+                    D_WEIGHT = D_WEIGHT - 1;
+                }
+                break;
+
+            case R.id.dan_xuan_one:
+                if (b) {
+                    ONE = 1;
+                    WEIGHT = WEIGHT + 1;
+                } else {
+                    ONE = 0;
+                    WEIGHT = WEIGHT - 1;
+                }
+                break;
+            case R.id.dan_xuan_two:
+                if (b) {
+                    TWO = 2;
+                    WEIGHT = WEIGHT + 1;
+                } else {
+                    TWO = 0;
+                    WEIGHT = WEIGHT - 1;
+                }
+                break;
+            case R.id.dan_xuan_three:
+                if (b) {
+                    THREE = 3;
+                    WEIGHT = WEIGHT + 1;
+                } else {
+                    THREE = 0;
+                    WEIGHT = WEIGHT - 1;
+                }
+                break;
+            case R.id.dan_xuan_four:
+                if (b) {
+                    FOUR = 4;
+                    WEIGHT = WEIGHT + 1;
+                } else {
+                    FOUR = 0;
+                    WEIGHT = WEIGHT - 1;
+                }
+                break;
+            case R.id.dan_xuan_five:
+                if (b) {
+                    FIVE = 5;
+                    WEIGHT = WEIGHT + 1;
+                } else {
+                    FIVE = 0;
+                    WEIGHT = WEIGHT - 1;
+                }
+                break;
+            case R.id.dan_xuan_six:
+                if (b) {
+                    SIX = 6;
+                    WEIGHT = WEIGHT + 1;
+                } else {
+                    SIX = 0;
+                    WEIGHT = WEIGHT - 1;
+                }
+                break;
+
             case R.id.he_zhi_three:
                 if (b) {
                     THREE = 3;

@@ -35,5 +35,4 @@
         app:headerLayout="@layout/navigation_header"
         app:menu="@menu/drawer_view"
         />
-<!--测试远程库-->
 </android.support.v4.widget.DrawerLayout>

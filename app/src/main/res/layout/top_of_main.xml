@@ -17,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#4fFF5722"
+            android:background="#ffffff"
             android:orientation="vertical">
 
             <TextView
@@ -45,7 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#4f2b566e"
+            android:background="#5f2b566e"
             android:orientation="vertical">
 
             <TextView
@@ -55,6 +55,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="20dp"
+                android:textColor="@color/white"
                 android:text="第96878期开奖倒计时" />
 
             <TextView
@@ -63,7 +64,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
-                android:text="09:08:22" />
+                android:text="09:08:22"
+                android:textColor="@color/white"/>
         </LinearLayout>
     </LinearLayout>
 

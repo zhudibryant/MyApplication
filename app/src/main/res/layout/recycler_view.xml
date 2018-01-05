@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/number_area">
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/number_area"
+    android:layout_above="@+id/bottom_of_main">
 
     <TextView
         android:id="@+id/tip_for_recycler"
@@ -15,7 +17,7 @@
         android:background="#78909C"
         android:gravity="center_vertical"
         android:paddingLeft="5dp"
-        android:text="提示：亲儿，长按可以删除单注号码。"
+        android:text="@string/tip_for_recycler"
         android:textColor="@color/white" />
 
     <android.support.v7.widget.RecyclerView
@@ -23,5 +25,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tip_for_recycler"
-        android:layout_margin="8dp" />
+        android:layout_margin="8dp"
+        />
 </RelativeLayout>
