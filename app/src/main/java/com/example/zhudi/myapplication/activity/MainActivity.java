@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.example.zhudi.myapplication.R;
 import com.example.zhudi.myapplication.adapter.RecyclerAdapter;
 import com.example.zhudi.myapplication.utils.Constant;
+import com.example.zhudi.myapplication.utils.ErTongHaoDanXuanMethod;
 import com.example.zhudi.myapplication.utils.Utils;
 import com.example.zhudi.myapplication.utils.ZuHeMethod;
 
@@ -82,9 +83,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     static final String[] MODE = new String[]{"和值", "三同号(单选/通选)", "二同号复选", "二同号单选", "三不同号", "二不同号", "三连号通选"};
     static ArrayList<String> arrayList = new ArrayList<String>();
     //二同号双数接收集合
-    static ArrayList doubleList = new ArrayList();
+    static ArrayList<String> doubleList = new ArrayList<String>();
     //二同号单数接收集合
-    static ArrayList singleList = new ArrayList();
+    static ArrayList<String> singleList = new ArrayList<String>();
 
     List<String> list;
     private RecyclerAdapter recyclerAdapter;
@@ -356,6 +357,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     //重置weight
                     WEIGHT = 0;
                     D_WEIGHT = 0;
+                    //清空recycler
+                    recyclerAdapter.onrefresh(null);
+                    zhuShu.setText("共0注");
+                    jinE.setText("金额0元");
                     //重置数字选择状态
                     erTongOne.setChecked(false);
                     erTongTwo.setChecked(false);
@@ -419,7 +424,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                spinner.clearFocus();
             }
         });
     }
@@ -643,8 +648,66 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.add_num:
                 //ArrayList 重置
                 arrayList.clear();
+                doubleList.clear();
+                singleList.clear();
 
-                if (modeName.equals("三不同号")) {
+                if (modeName.equals("二同号单选")) {
+                    if (WEIGHT == 0 && D_WEIGHT == 0) {
+                        Utils.alertShort(this, "请选择至少一对二同号和单号");
+                    } else {
+                        if (D_ONE != 0) {
+                            doubleList.add("1");
+                        }
+                        if (D_TWO != 0) {
+                            doubleList.add("2");
+                        }
+                        if (D_THREE != 0) {
+                            doubleList.add("3");
+                        }
+                        if (D_FOUR != 0) {
+                            doubleList.add("4");
+                        }
+                        if (D_FIVE != 0) {
+                            doubleList.add("5");
+                        }
+                        if (D_SIX != 0) {
+                            doubleList.add("6");
+                        }
+                        if (ONE != 0) {
+                            singleList.add("1");
+                        }
+                        if (TWO != 0) {
+                            singleList.add("2");
+                        }
+                        if (THREE != 0) {
+                            singleList.add("3");
+                        }
+                        if (FOUR != 0) {
+                            singleList.add("4");
+                        }
+                        if (FIVE != 0) {
+                            singleList.add("5");
+                        }
+                        if (SIX != 0) {
+                            singleList.add("6");
+                        }
+                        for (String nub_d:doubleList){
+                            Log.i("doubleList----",nub_d);
+                        }
+                        for (String nub_s:singleList){
+                            Log.i("singleList----",nub_s);
+                        }
+
+                        list = ErTongHaoDanXuanMethod.MixNumber(doubleList.toArray(new String[doubleList.size()]), singleList.toArray(new String[singleList.size()]));
+                        if (list.size()==0){
+                            Utils.alertShort(this,"双号和单号选择冲突，请避开三同号");
+                        }
+                        recyclerAdapter.onrefresh(list);
+                        N = list.size();
+                        zhuShu.setText("共" + N + "注");
+                        jinE.setText("金额" + N * 2 + "元");
+                    }
+                } else if (modeName.equals("三不同号")) {
                     if (WEIGHT < 3) {
                         Utils.alertShort(this, "选择数字不能小于3个");
                     } else {
@@ -666,16 +729,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         if (SIX != 0) {
                             arrayList.add("6");
                         }
+
+                        N = ZuHeMethod.combination(arrayList.size(), 3);
+                        list = ZuHeMethod.combinationSelect(arrayList.toArray(new String[arrayList.size()]), 3);
+                        recyclerAdapter.onrefresh(list);
+                        zhuShu.setText("共" + N + "注");
+                        jinE.setText("金额" + N * 2 + "元");
                     }
-                    N = ZuHeMethod.combination(arrayList.size(), 3);
-                    list = ZuHeMethod.combinationSelect(arrayList.toArray(new String[arrayList.size()]), 3);
-                    recyclerAdapter.onrefresh(list);
-                    zhuShu.setText("共" + N + "注");
-                    jinE.setText("金额" + N * 2 + "元");
 
 
-                }
-                if (modeName.equals("二不同号")) {
+                } else if (modeName.equals("二不同号")) {
                     if (WEIGHT < 2) {
                         Utils.alertShort(this, "选择数字不能小于2个");
                     } else {
@@ -697,13 +760,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         if (SIX != 0) {
                             arrayList.add("6");
                         }
+                        N = ZuHeMethod.combination(arrayList.size(), 2);
+                        list = ZuHeMethod.combinationSelect(arrayList.toArray(new String[arrayList.size()]), 2);
+                        recyclerAdapter.onrefresh(list);
+                        zhuShu.setText("共" + N + "注");
+                        jinE.setText("金额" + N * 2 + "元");
                     }
-                    N = ZuHeMethod.combination(arrayList.size(), 2);
-                    list = ZuHeMethod.combinationSelect(arrayList.toArray(new String[arrayList.size()]), 2);
-                    recyclerAdapter.onrefresh(list);
-                    zhuShu.setText("共" + N + "注");
-                    jinE.setText("金额" + N * 2 + "元");
-
                 }
                 break;
             case R.id.zhui_hao:
