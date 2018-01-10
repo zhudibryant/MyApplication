@@ -2,45 +2,44 @@
     <string name="app_name">预言家</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <!--<string name="prompt_email">Email</string>-->
+    <!--<string name="prompt_password">Password (optional)</string>-->
+    <!--<string name="action_sign_in">Sign in or register</string>-->
     <string name="action_sign_in_short" translatable="false">登录</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-    <string name="title_activity_ad">AdActivity</string>
-
-    <string name="action_settings">Settings</string>
+    <!--<string name="error_invalid_email">This email address is invalid</string>-->
+    <!--<string name="error_invalid_password">This password is too short</string>-->
+    <!--<string name="error_incorrect_password">This password is incorrect</string>-->
+    <!--<string name="error_field_required">This field is required</string>-->
+    <!--<string name="permission_rationale">"Contacts permissions are needed for providing email-->
+        <!--completions."-->
+    <!--</string>-->
+    <!--<string name="title_activity_ad">AdActivity</string>-->
+    <!--<string name="interstitial_ad_sample">Interstitial Ad Sample</string>-->
+    <!--<string name="start_level">Level 1</string>-->
+    <!--<string name="next_level">Next Level</string>-->
+    <!--<string name="action_settings">Settings</string>-->
+    <!-- -
+        This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
+        For more information, see https://support.google.com/admob/answer/3052638
+    <!- -->
+    <!--<string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>-->
     <string name="toolbar_message">我的消息</string>
-    <string name="rules">Rules</string>
     <string name="san_tong_hao">三同</string>
     <string name="he_zhi">和值</string>
     <string name="san_lian_hao_tong_xuan">三连号</string>
     <string name="hao_ma">号码</string>
     <string name="er_tong_hao">二同</string>
     <string name="bu_tong_hao">单号</string>
+    <string name="fu_xuan">复选</string>
 
-    <string name="interstitial_ad_sample">Interstitial Ad Sample</string>
-    <string name="start_level">Level 1</string>
-    <string name="next_level">Next Level</string>
+    <string name="nav_me">账户信息</string>
+    <string name="nav_message">我的消息</string>
+    <string name="nav_rules">游戏规则</string>
+    <string name="nav_service">联系客服</string>
+    <string name="nav_share">分享APP</string>
+    <string name="nav_logout">注销账户</string>
+
     <string name="tip">提示：收益最终提现到绑定的银行卡中，请确保绑定的银行卡卡号和持卡人姓名正确无误。</string>
     <string name="er_bu_tong_dan_shi_tip">每个号码之间请用逗号(,)隔开</string>
     <string name="tip_for_recycler">提示：亲儿，长按可以删除单注号码。</string>
-    <!-- -
-        This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
-        For more information, see https://support.google.com/admob/answer/3052638
-    <!- -->
-    <!--<string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>-->
-    <string name="drawer_open">Open</string>
-    <string name="drawer_close">Close</string>
-    <!--菜单内容-->
-    <!--<string-array name="planets_array">
-        <item>个人信息</item>
-        <item>设置</item>
-    </string-array>-->
 </resources>

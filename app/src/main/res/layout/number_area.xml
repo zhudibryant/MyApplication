@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"
@@ -453,11 +453,11 @@
 
     <LinearLayout
         android:id="@+id/san_tong_hao"
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"
@@ -562,14 +562,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_margin="0dp"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
@@ -790,56 +789,111 @@
         android:id="@+id/er_tong_hao_fu_xuan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_margin="10dp"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="42dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/hao_ma"
+            android:text="@string/fu_xuan"
             android:textColor="#455A64"
             android:textSize="18dp"
             android:textStyle="bold"
             android:typeface="monospace" />
 
-        <ImageView
+        <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@mipmap/unchk_1" />
+            android:layout_height="65dp"
+            android:layout_weight="1">
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@mipmap/unchk_2" />
+            <CheckBox
+                android:id="@+id/fu_xuan_one"
+                android:layout_width="42dp"
+                android:layout_height="65dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_f1"
+                android:button="@null"
+                android:checked="false" />
+        </FrameLayout>
 
-        <ImageView
+        <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1" />
+            android:layout_height="65dp"
+            android:layout_weight="1">
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@mipmap/unchk_4" />
+            <CheckBox
+                android:id="@+id/fu_xuan_two"
+                android:layout_width="42dp"
+                android:layout_height="65dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_f2"
+                android:button="@null"
+                android:checked="false" />
+        </FrameLayout>
 
-        <ImageView
+        <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@mipmap/unchk_5" />
+            android:layout_height="65dp"
+            android:layout_weight="1">
 
-        <ImageView
+            <CheckBox
+                android:id="@+id/fu_xuan_three"
+                android:layout_width="42dp"
+                android:layout_height="65dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_f3"
+                android:button="@null"
+                android:checked="false" />
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@mipmap/unchk_6" />
+            android:layout_height="65dp"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/fu_xuan_four"
+                android:layout_width="42dp"
+                android:layout_height="65dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_f4"
+                android:button="@null"
+                android:checked="false" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/fu_xuan_five"
+                android:layout_width="42dp"
+                android:layout_height="65dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_f5"
+                android:button="@null"
+                android:checked="false" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/fu_xuan_six"
+                android:layout_width="42dp"
+                android:layout_height="65dp"
+                android:layout_gravity="center"
+                android:background="@drawable/selector_f6"
+                android:button="@null"
+                android:checked="false" />
+        </FrameLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -848,7 +902,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"

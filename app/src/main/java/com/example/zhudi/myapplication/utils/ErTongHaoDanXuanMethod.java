@@ -24,6 +24,7 @@ public class ErTongHaoDanXuanMethod {
             for (j = 0; j < singleListLen; j++) {
                 if (doubleList[i] == singleList[j]) {
 
+                    //Do Nothing
                 } else {
                     Log.i("zhu", doubleList[i]+","+singleList[j]);
 

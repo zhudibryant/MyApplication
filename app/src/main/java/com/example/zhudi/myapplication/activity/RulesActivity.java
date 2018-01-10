@@ -2,6 +2,7 @@ package com.example.zhudi.myapplication.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.webkit.WebView;
 
 import com.example.zhudi.myapplication.R;
 import com.example.zhudi.myapplication.utils.AddToolBar;
@@ -17,6 +18,9 @@ public class RulesActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        AddToolBar.addToolBar(this,"规则介绍","#4DB6AC");
+        AddToolBar.addToolBar(this,"规则介绍","#2b566e");
+
+        WebView webView = findViewById(R.id.web_view);
+        webView.loadUrl("http://39.104.53.208:8080/prophet/bjk/bjksintropage");
     }
 }

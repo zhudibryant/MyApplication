@@ -3,13 +3,15 @@ package com.example.zhudi.myapplication.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +26,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -52,11 +53,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private LinearLayout heZhi, quickChoice;
     private LinearLayout sanLianHaoTongXuan;
     private LinearLayout withoutAddNum;
+    private DrawerLayout mDrawerLayout;
 
     private CheckBox buTongHaoOne, buTongHaoTwo, buTongHaoThree, buTongHaoFour, buTongHaoFive, buTongHaoSix;
     private CheckBox erTongOne, erTongTwo, erTongThree, erTongFour, erTongFive, erTongSix;
     private CheckBox danOne, danTwo, danThree, danFour, danFive, danSix;
     private CheckBox heZhiThree, heZhiFour, heZhiFive, heZhiSix, heZhiSeven, heZhiEight, heZhiNine, heZhiTen, heZhiEleven, heZhiTwelve, heZhiThirteen, heZhiFourteen, heZhiFifteen, heZhiSixteen, heZhiSeventeen, heZhiEighteen;
+    private CheckBox fuXuanOne, fuXuanTwo, fuXuanThree, fuXuanFour, fuXuanFive, fuXuanSix;
+    private CheckBox sanTongOne, sanTongTwo, sanTongThree, sanTongFour, sanTongFive, sanTongSix;
+    private CheckBox TongXuan;
 
     private TextView Xiao, Da, Dan, Shuang, Quan, Qing;
     private TextView zhuShu;
@@ -106,9 +111,41 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void initView() {
 
-        Toolbar toolbarOfMain = (Toolbar) findViewById(R.id.toolBar_without_back_icon);
+        Toolbar toolbarOfMain = (Toolbar) findViewById(R.id.toolBar);
+        toolbarOfMain.setNavigationIcon(R.mipmap.toolbar_menu);
+        toolbarOfMain.setNavigationOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                mDrawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
         //此方法放在所有标题栏按钮事件函数的前面
-        setSupportActionBar(toolbarOfMain);
+        //setSupportActionBar(toolbarOfMain);
+        //final ActionBar ab = getSupportActionBar();
+        //ab.setHomeAsUpIndicator(R.drawable.toolbar_menu);
+        //ab.setDisplayHomeAsUpEnabled(true);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.left_drawer);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(
+                    new NavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                            switch (item.getItemId()){
+                                case R.id.nav_rules:
+                                    seeRules();
+                                    break;
+                                case R.id.nav_me:
+                                    seeUserInfo();
+                                    break;
+                            }
+                            mDrawerLayout.closeDrawers();
+                            return true;
+                        }
+                    }
+            );
+        }
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         spinner = findViewById(R.id.spinner);
@@ -130,6 +167,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         buTongHaoFour = findViewById(R.id.bu_tong_hao_four);
         buTongHaoFive = findViewById(R.id.bu_tong_hao_five);
         buTongHaoSix = findViewById(R.id.bu_tong_hao_six);
+
+        //"三同号"数字控件获取
+        sanTongOne = findViewById(R.id.san_tong_hao_one);
+        sanTongTwo = findViewById(R.id.san_tong_hao_two);
+        sanTongThree = findViewById(R.id.san_tong_hao_three);
+        sanTongFour = findViewById(R.id.san_tong_hao_four);
+        sanTongFive = findViewById(R.id.san_tong_hao_five);
+        sanTongSix = findViewById(R.id.san_tong_hao_six);
+
+        //"三连号"数字控件获取
+        TongXuan = findViewById(R.id.san_lian_hao_tong);
+
+        //"二同号复选"数字控件获取
+        fuXuanOne = findViewById(R.id.fu_xuan_one);
+        fuXuanTwo = findViewById(R.id.fu_xuan_two);
+        fuXuanThree = findViewById(R.id.fu_xuan_three);
+        fuXuanFour = findViewById(R.id.fu_xuan_four);
+        fuXuanFive = findViewById(R.id.fu_xuan_five);
+        fuXuanSix = findViewById(R.id.fu_xuan_six);
 
         //"二同号单选"数字控件获取
         //获取"二同号"数字控件
@@ -189,6 +245,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         buTongHaoFive.setOnCheckedChangeListener(this);
         buTongHaoSix.setOnCheckedChangeListener(this);
 
+        //"三同号"数字控件绑定OnCheckChange事件
+        sanTongOne.setOnCheckedChangeListener(this);
+        sanTongTwo.setOnCheckedChangeListener(this);
+        sanTongThree.setOnCheckedChangeListener(this);
+        sanTongFour.setOnCheckedChangeListener(this);
+        sanTongFive.setOnCheckedChangeListener(this);
+        sanTongSix.setOnCheckedChangeListener(this);
+
+        //"三连号"数字控件绑定OnCheckChange事件
+        TongXuan.setOnCheckedChangeListener(this);
+
+        //"二同号复选"数字控件绑定OnCheckChange事件
+        fuXuanOne.setOnCheckedChangeListener(this);
+        fuXuanTwo.setOnCheckedChangeListener(this);
+        fuXuanThree.setOnCheckedChangeListener(this);
+        fuXuanFour.setOnCheckedChangeListener(this);
+        fuXuanFive.setOnCheckedChangeListener(this);
+        fuXuanSix.setOnCheckedChangeListener(this);
         //"二同号单选"数字控件绑定onCheckChange事件
         //为数字"二同号"控件绑定点击事件
         erTongOne.setOnCheckedChangeListener(this);
@@ -239,7 +313,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Cart = findViewById(R.id.num_cart);
         Cart.setOnClickListener(this);
 
-        //获取“添加号码”控件的父控件
+        //获取“组合号码”控件的父控件
         withoutAddNum = findViewById(R.id.without_add_num);
 
         zhuShu = findViewById(R.id.zhu_shu);
@@ -278,12 +352,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private Toolbar.OnMenuItemClickListener onMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-            //String msg = "";
             switch (item.getItemId()) {
-                case R.id.toolbar_message:
+                case R.id.nav_me:
                     Log.e("show", "fuck");
                     seeUserInfo();
                     break;
+                case R.id.nav_rules:
+                    seeRules();
             }
             return true;
         }
@@ -292,6 +367,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void seeUserInfo() {
         Intent seeUserInfo = new Intent(this, UserInfoActivity.class);
         startActivity(seeUserInfo);
+    }
+
+    private void seeRules() {
+        Intent seeRules = new Intent(this, RulesActivity.class);
+        startActivity(seeRules);
     }
 
     private void initSpnner() {
@@ -305,8 +385,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 modeName = MODE[i];
 
                 if (i == 0) {
-                    //重置WEIGHT
-                    WEIGHT = 0;
                     //重置数字选择状态
                     heZhiThree.setChecked(false);
                     heZhiFour.setChecked(false);
@@ -328,8 +406,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     recyclerAdapter.onrefresh(null);
                     zhuShu.setText("共0注");
                     jinE.setText("金额0元");
-
-                    Log.i("weight", "weight -- " + WEIGHT);
+                    //重置WEIGHT
+                    WEIGHT = 0;
                     sanTongHao.setVisibility(View.GONE);
                     quickChoice.setVisibility(View.VISIBLE);
                     heZhi.setVisibility(View.VISIBLE);
@@ -338,6 +416,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     erTongHaoDanXuan.setVisibility(View.GONE);
                     sanLianHaoTongXuan.setVisibility(View.GONE);
                 } else if (i == 1) {
+
+                    sanTongOne.setChecked(false);
+                    sanTongTwo.setChecked(false);
+                    sanTongThree.setChecked(false);
+                    sanTongFour.setChecked(false);
+                    sanTongFive.setChecked(false);
+                    sanTongSix.setChecked(false);
+                    //重置WEIGHT
+                    WEIGHT = 0;
+                    //清空RecyclerView内容
+                    recyclerAdapter.onrefresh(null);
+                    zhuShu.setText("共0注");
+                    jinE.setText("金额0元");
+
                     sanTongHao.setVisibility(View.VISIBLE);
                     heZhi.setVisibility(View.GONE);
                     quickChoice.setVisibility(View.GONE);
@@ -346,6 +438,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     erTongHaoDanXuan.setVisibility(View.GONE);
                     sanLianHaoTongXuan.setVisibility(View.GONE);
                 } else if (i == 2) {
+
+                    fuXuanOne.setChecked(false);
+                    fuXuanTwo.setChecked(false);
+                    fuXuanThree.setChecked(false);
+                    fuXuanFour.setChecked(false);
+                    fuXuanFive.setChecked(false);
+                    fuXuanSix.setChecked(false);
+                    //重置WEIGHT
+                    WEIGHT = 0;
+                    //清空RecyclerView内容
+                    recyclerAdapter.onrefresh(null);
+                    zhuShu.setText("共0注");
+                    jinE.setText("金额0元");
+
                     erTongHaoFuXuan.setVisibility(View.VISIBLE);
                     erTongHaoDanXuan.setVisibility(View.GONE);
                     buTongHao.setVisibility(View.GONE);
@@ -354,13 +460,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     quickChoice.setVisibility(View.GONE);
                     sanLianHaoTongXuan.setVisibility(View.GONE);
                 } else if (i == 3) {
-                    //重置weight
-                    WEIGHT = 0;
-                    D_WEIGHT = 0;
-                    //清空recycler
-                    recyclerAdapter.onrefresh(null);
-                    zhuShu.setText("共0注");
-                    jinE.setText("金额0元");
+
                     //重置数字选择状态
                     erTongOne.setChecked(false);
                     erTongTwo.setChecked(false);
@@ -374,7 +474,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     danFour.setChecked(false);
                     danFive.setChecked(false);
                     danSix.setChecked(false);
-
+                    //重置weight
+                    WEIGHT = 0;
+                    D_WEIGHT = 0;
+                    //清空recycler
+                    recyclerAdapter.onrefresh(null);
+                    zhuShu.setText("共0注");
+                    jinE.setText("金额0元");
                     erTongHaoDanXuan.setVisibility(View.VISIBLE);
                     sanTongHao.setVisibility(View.GONE);
                     buTongHao.setVisibility(View.GONE);
@@ -403,6 +509,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     erTongHaoFuXuan.setVisibility(View.GONE);
                     sanLianHaoTongXuan.setVisibility(View.GONE);
                 } else if (i == 6) {
+                    TongXuan.setChecked(false);
+                    //重置weight
+                    WEIGHT = 0;
+                    recyclerAdapter.onrefresh(null);
+                    zhuShu.setText("共0注");
+                    jinE.setText("金额0元");
                     sanLianHaoTongXuan.setVisibility(View.VISIBLE);
                     erTongHaoDanXuan.setVisibility(View.GONE);
                     sanTongHao.setVisibility(View.GONE);
@@ -691,16 +803,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         if (SIX != 0) {
                             singleList.add("6");
                         }
-                        for (String nub_d:doubleList){
-                            Log.i("doubleList----",nub_d);
+                        for (String nub_d : doubleList) {
+                            Log.i("doubleList----", nub_d);
                         }
-                        for (String nub_s:singleList){
-                            Log.i("singleList----",nub_s);
+                        for (String nub_s : singleList) {
+                            Log.i("singleList----", nub_s);
                         }
 
                         list = ErTongHaoDanXuanMethod.MixNumber(doubleList.toArray(new String[doubleList.size()]), singleList.toArray(new String[singleList.size()]));
-                        if (list.size()==0){
-                            Utils.alertShort(this,"双号和单号选择冲突，请避开三同号");
+                        if (list.size() == 0) {
+                            Utils.alertShort(this, "双号和单号选择冲突，请避开三同号");
                         }
                         recyclerAdapter.onrefresh(list);
                         N = list.size();
@@ -801,6 +913,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
+            case R.id.san_lian_hao_tong:
+                if (b) {
+                    WEIGHT = 4;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+
+                } else {
+                    WEIGHT = 0;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+
+                }
+                break;
             case R.id.er_tong_hao_one:
                 if (b) {
                     D_ONE = 1;
@@ -1248,6 +1373,163 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Shuang.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
+                }
+                break;
+            case R.id.fu_xuan_one:
+                if (b) {
+                    ONE = 1;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    ONE = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                }
+                break;
+            case R.id.fu_xuan_two:
+                if (b) {
+                    TWO = 2;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    TWO = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                }
+                break;
+            case R.id.fu_xuan_three:
+                if (b) {
+                    THREE = 3;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    THREE = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                }
+                break;
+            case R.id.fu_xuan_four:
+                if (b) {
+                    FOUR = 4;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    FOUR = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                }
+                break;
+            case R.id.fu_xuan_five:
+                if (b) {
+                    FIVE = 5;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    FIVE = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                }
+                break;
+            case R.id.fu_xuan_six:
+                if (b) {
+                    SIX = 6;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    SIX = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                }
+                break;
+
+            case R.id.san_tong_hao_one:
+                if (b) {
+                    ONE = 1;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    ONE = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                }
+                break;
+            case R.id.san_tong_hao_two:
+                if (b) {
+                    TWO = 2;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    TWO = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                }
+                break;
+            case R.id.san_tong_hao_three:
+                if (b) {
+                    THREE = 3;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    THREE = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                }
+                break;
+            case R.id.san_tong_hao_four:
+                if (b) {
+                    FOUR = 4;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    FOUR = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                }
+                break;
+            case R.id.san_tong_hao_five:
+                if (b) {
+                    FIVE = 5;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    FIVE = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                }
+                break;
+            case R.id.san_tong_hao_six:
+                if (b) {
+                    SIX = 6;
+                    WEIGHT = WEIGHT + 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
+                } else {
+                    SIX = 0;
+                    WEIGHT = WEIGHT - 1;
+                    zhuShu.setText("共" + WEIGHT + "注");
+                    jinE.setText("金额" + WEIGHT * 2 + "元");
                 }
                 break;
 

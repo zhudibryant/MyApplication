@@ -9,50 +9,12 @@
 
     tools:context="com.example.zhudi.myapplication.activity.RulesActivity">
 
-    <include layout="@layout/title_top_view"/>
+    <include layout="@layout/title_top_view" />
 
-    <TextView
+    <WebView
+        android:id="@+id/web_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="20dp"
-        android:text="预测结果由三位数字组成每位数字为0-9之间的任意数。"
-        android:textColor="#607D8B"
-        android:textSize="25dp"
-        android:typeface="monospace" />
+        android:layout_height="match_parent"></WebView>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="0.18"
-        android:scaleType="centerCrop"
-        android:src="@drawable/demo" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:text="准确预测每个位置的随机数，即可获得预言奖励。\n奖励金的多少取决于每次预言人数，邀请好友一起来预言，获取的奖励金会更多哦！"
-        android:textColor="#607D8B"
-        android:textSize="25dp"
-        android:typeface="monospace" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:text="奖励金可以提现到绑定的支付账号中。"
-        android:textColor="#FF5722"
-        android:textSize="26dp"
-        android:textStyle="bold"
-        android:typeface="monospace" />
 
 </LinearLayout>

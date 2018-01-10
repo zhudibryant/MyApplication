@@ -4,22 +4,26 @@
         <item
             android:id="@+id/nav_me"
             android:icon="@drawable/nav_me"
-            android:title="账户信息" />
+            android:title="@string/nav_me" />
         <item
             android:id="@+id/nav_message"
             android:icon="@drawable/nav_message"
-            android:title="我的消息" />
+            android:title="@string/nav_message" />
         <item
             android:id="@+id/nav_rules"
             android:icon="@drawable/nav_rules"
-            android:title="游戏规则" />
+            android:title="@string/nav_rules" />
         <item
             android:id="@+id/nav_service"
             android:icon="@drawable/nav_service"
-            android:title="联系客服" />
+            android:title="@string/nav_service" />
         <item
             android:id="@+id/nav_share"
             android:icon="@drawable/nav_share"
-            android:title="分享APP" />
+            android:title="@string/nav_share" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/nav_logout"
+            android:title="@string/nav_logout"/>
     </group>
 </menu>
