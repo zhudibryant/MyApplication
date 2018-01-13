@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
     android:background="@color/colorPrimaryDark"
-    app:navigationIcon="@mipmap/back_icon"
+    app:navigationIcon="@mipmap/ic_action_back"
     app:titleTextColor="@android:color/white"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     >
 </android.support.v7.widget.Toolbar>

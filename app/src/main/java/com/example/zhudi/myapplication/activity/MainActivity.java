@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.zhudi.myapplication.R;
 import com.example.zhudi.myapplication.adapter.RecyclerAdapter;
@@ -112,20 +114,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void initView() {
 
         Toolbar toolbarOfMain = (Toolbar) findViewById(R.id.toolBar);
-        toolbarOfMain.setNavigationIcon(R.mipmap.toolbar_menu);
-        toolbarOfMain.setNavigationOnClickListener(new View.OnClickListener(){
+        toolbarOfMain.setTitle("快3");
+        //此方法放在所有标题栏按钮事件函数的前面
+        setSupportActionBar(toolbarOfMain);
 
+        //toolbar元素图标绑定点击事件
+        toolbarOfMain.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
-            public void onClick(View view) {
-                mDrawerLayout.openDrawer(GravityCompat.START);
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    //信息图标点击
+                    case R.id.toolbar_message:
+                        Log.i("Msg","message");
+                        break;
+                }
+                return false;
             }
         });
-        //此方法放在所有标题栏按钮事件函数的前面
-        //setSupportActionBar(toolbarOfMain);
-        //final ActionBar ab = getSupportActionBar();
-        //ab.setHomeAsUpIndicator(R.drawable.toolbar_menu);
-        //ab.setDisplayHomeAsUpEnabled(true);
+
         mDrawerLayout = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, toolbarOfMain, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.setDrawerListener(toggle);
+        toggle.syncState();
         NavigationView navigationView = findViewById(R.id.left_drawer);
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(
@@ -141,12 +152,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                                     break;
                             }
                             mDrawerLayout.closeDrawers();
-                            return true;
+                            return false;
                         }
                     }
             );
         }
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         spinner = findViewById(R.id.spinner);
         initSpnner();
@@ -347,9 +357,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     //标题栏右侧的用户按钮和规则按钮
-    private Toolbar.OnMenuItemClickListener onMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
+    /*private Toolbar.OnMenuItemClickListener onMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
@@ -362,7 +381,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
             return true;
         }
-    };
+    };*/
 
     private void seeUserInfo() {
         Intent seeUserInfo = new Intent(this, UserInfoActivity.class);

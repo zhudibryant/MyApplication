@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">预言家</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- Strings related to login -->
     <!--<string name="prompt_email">Email</string>-->
     <!--<string name="prompt_password">Password (optional)</string>-->
@@ -33,7 +35,7 @@
     <string name="fu_xuan">复选</string>
 
     <string name="nav_me">账户信息</string>
-    <string name="nav_message">我的消息</string>
+    <string name="nav_set">用户设置</string>
     <string name="nav_rules">游戏规则</string>
     <string name="nav_service">联系客服</string>
     <string name="nav_share">分享APP</string>

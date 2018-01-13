@@ -6,9 +6,9 @@
             android:icon="@drawable/nav_me"
             android:title="@string/nav_me" />
         <item
-            android:id="@+id/nav_message"
-            android:icon="@drawable/nav_message"
-            android:title="@string/nav_message" />
+            android:id="@+id/nav_set"
+            android:icon="@drawable/nav_set"
+            android:title="@string/nav_set" />
         <item
             android:id="@+id/nav_rules"
             android:icon="@drawable/nav_rules"
