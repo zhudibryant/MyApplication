@@ -5,4 +5,5 @@
     <color name="colorAccent">#90A4AE</color>
     <color name="white">#FFFFFF</color>
     <color name="nav_header_color">#326480</color>
+    <color name="divider">#ffd2d2d2</color>
 </resources>

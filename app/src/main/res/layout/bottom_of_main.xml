@@ -15,10 +15,18 @@
         android:visibility="visible">
 
         <TextView
+            android:id="@+id/bei_shu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="1倍" />
+
+        <TextView
             android:id="@+id/zhu_shu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
             tools:text="共0注" />
 
         <TextView
@@ -26,44 +34,60 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             tools:text="共0.000元" />
+
+        <TextView
+            android:id="@+id/max_prize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="奖金最高240元" />
+
+        <TextView
+            android:id="@+id/min_prize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="最低10元" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_gravity="center"
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
         android:gravity="center"
-        android:layout_gravity="center"
         android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/without_add_num"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="40dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/delete"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="5dp"
+                android:layout_weight="1"
                 android:src="@mipmap/ic_delete_forever"
                 android:tint="@color/colorPrimary" />
 
             <Button
                 android:id="@+id/add_num"
                 android:layout_width="0dp"
-                android:layout_weight="3"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
+                android:layout_weight="3"
                 android:background="#546E7A"
                 android:text="组合号码"
                 android:textColor="@color/white" />
@@ -72,8 +96,8 @@
         <LinearLayout
             android:id="@+id/confirm_group"
             android:layout_width="0dp"
-            android:layout_weight="2"
             android:layout_height="40dp"
+            android:layout_weight="2"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -89,10 +113,10 @@
             <Button
                 android:id="@+id/confirm"
                 android:layout_width="0dp"
-                android:layout_weight="3"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
+                android:layout_weight="3"
                 android:background="#F44336"
                 android:text="确认投注"
                 android:textColor="@color/white"
@@ -101,10 +125,10 @@
             <ImageView
                 android:id="@+id/num_cart"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
+                android:layout_weight="1"
                 android:src="@mipmap/ic_shopping_cart" />
         </LinearLayout>
 

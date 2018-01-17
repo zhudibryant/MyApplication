@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rate_area"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_above="@+id/bottom_of_main"
+    android:layout_marginBottom="12dp"
+    android:layout_marginTop="3dp">
+
+    <com.example.zhudi.myapplication.view.AmountView
+        android:id="@+id/amount_view"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        app:btnTextSize="14sp"
+        app:btnWidth="30dp"
+        app:tvWidth="50dp"/>
+
+    <RadioGroup
+        android:gravity="center"
+        android:id="@+id/rg_unit_money"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_toEndOf="@+id/amount_view"
+        android:layout_toRightOf="@+id/amount_view"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/yuan"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:background="@drawable/selector_yuan"
+            android:button="@null"
+            android:checked="true"
+            android:layout_marginLeft="30dp"/>
+
+        <RadioButton
+            android:id="@+id/jiao"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:background="@drawable/selector_jiao"
+            android:button="@null"
+            android:layout_marginLeft="10dp"/>
+    </RadioGroup>
+
+</RelativeLayout>

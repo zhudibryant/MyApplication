@@ -39,13 +39,15 @@
         <!--<meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />-->
-<!--OSChina 测试-->
+        <!--OSChina 测试-->
         <!--OS命令行测试成功-->
         <!--<activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />-->
-        <activity android:name=".activity.MainActivity" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.RulesActivity" />
         <activity android:name=".activity.UserInfoActivity" />
         <activity android:name=".activity.CartInforActivity"></activity>

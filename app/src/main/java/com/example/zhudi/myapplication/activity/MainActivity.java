@@ -37,6 +37,7 @@ import com.example.zhudi.myapplication.utils.Constant;
 import com.example.zhudi.myapplication.utils.ErTongHaoDanXuanMethod;
 import com.example.zhudi.myapplication.utils.Utils;
 import com.example.zhudi.myapplication.utils.ZuHeMethod;
+import com.example.zhudi.myapplication.view.AmountView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private Button AddNum, ZhuiHao, Confirm;
 
     private ImageView Delete, Cart;
+
+    private AmountView mAmountView;
 
     //每个checkbox对应的静态数字变量
     static int ONE, TWO, THREE, FOUR, FIVE, SIX;
@@ -122,10 +125,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         toolbarOfMain.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     //信息图标点击
                     case R.id.toolbar_message:
-                        Log.i("Msg","message");
+                        Log.i("Msg", "message");
                         break;
                 }
                 return false;
@@ -143,7 +146,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     new NavigationView.OnNavigationItemSelectedListener() {
                         @Override
                         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                            switch (item.getItemId()){
+                            switch (item.getItemId()) {
                                 case R.id.nav_rules:
                                     seeRules();
                                     break;
@@ -160,6 +163,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         spinner = findViewById(R.id.spinner);
         initSpnner();
+
+        //获取 AmountView mAmountView;
+        mAmountView = findViewById(R.id.amount_view);
+        mAmountView.setMax_amount(100);
+        mAmountView.setOnAmountChangeListener(new AmountView.OnAmountChangeListener() {
+            @Override
+            public void onAmountChange(View view, int amount) {
+                Log.e("msg", "amount--" + amount);
+            }
+        });
 
         //根据spinner选择变换数字选择模块
         heZhi = findViewById(R.id.he_zhi);
@@ -367,27 +380,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    //标题栏右侧的用户按钮和规则按钮
-    /*private Toolbar.OnMenuItemClickListener onMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.nav_me:
-                    Log.e("show", "fuck");
-                    seeUserInfo();
-                    break;
-                case R.id.nav_rules:
-                    seeRules();
-            }
-            return true;
-        }
-    };*/
-
+    //跳转"用户信息"页面
     private void seeUserInfo() {
         Intent seeUserInfo = new Intent(this, UserInfoActivity.class);
         startActivity(seeUserInfo);
     }
 
+    //跳转"游戏规则"页面
     private void seeRules() {
         Intent seeRules = new Intent(this, RulesActivity.class);
         startActivity(seeRules);
