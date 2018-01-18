@@ -18,39 +18,29 @@
             android:id="@+id/bei_shu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:text="1倍" />
+            android:layout_marginRight="8dp"
+            tools:text="1倍" />
 
         <TextView
             android:id="@+id/zhu_shu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginRight="8dp"
             tools:text="共0注" />
 
         <TextView
             android:id="@+id/jin_e"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="8dp"
             tools:text="共0.000元" />
 
         <TextView
             android:id="@+id/max_prize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:text="奖金最高240元" />
 
-        <TextView
-            android:id="@+id/min_prize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="最低10元" />
     </LinearLayout>
 
     <LinearLayout
@@ -74,11 +64,11 @@
             <ImageView
                 android:id="@+id/delete"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_delete_forever"
+                android:src="@mipmap/ic_action_delete"
                 android:tint="@color/colorPrimary" />
 
             <Button
@@ -89,7 +79,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_weight="3"
                 android:background="#546E7A"
-                android:text="组合号码"
+                android:text="@string/btn_shaixuan"
                 android:textColor="@color/white" />
         </LinearLayout>
 
@@ -107,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="#78909C"
-                android:text="追号"
+                android:text="@string/btn_zhuihao"
                 android:textColor="@color/white" />
 
             <Button
@@ -117,19 +107,19 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="3"
-                android:background="#F44336"
-                android:text="确认投注"
+                android:background="@color/btn_touzhu"
+                android:text="@string/btn_touzhu"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/num_cart"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_shopping_cart" />
+                android:src="@mipmap/ic_action_list" />
         </LinearLayout>
 
     </LinearLayout>

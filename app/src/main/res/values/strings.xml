@@ -41,6 +41,9 @@
     <string name="nav_share">分享APP</string>
     <string name="nav_logout">注销账户</string>
 
+    <string name="btn_shaixuan">号码筛选</string>
+    <string name="btn_touzhu">确定投注</string>
+    <string name="btn_zhuihao">追号</string>
     <string name="tip">提示：收益最终提现到绑定的银行卡中，请确保绑定的银行卡卡号和持卡人姓名正确无误。</string>
     <string name="er_bu_tong_dan_shi_tip">每个号码之间请用逗号(,)隔开</string>
     <string name="tip_for_recycler">提示：亲儿，长按可以删除单注号码。</string>
