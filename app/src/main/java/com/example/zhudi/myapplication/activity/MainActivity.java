@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.example.zhudi.myapplication.R;
 import com.example.zhudi.myapplication.adapter.RecyclerAdapter;
+import com.example.zhudi.myapplication.utils.Arith;
 import com.example.zhudi.myapplication.utils.Constant;
 import com.example.zhudi.myapplication.utils.ErTongHaoDanXuanMethod;
 import com.example.zhudi.myapplication.utils.Utils;
@@ -87,9 +88,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private static int SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE, THIRTEEN, FOURTEEN, FIFTEEN, SIXTEEN, SEVENTEEN, EIGHTEEN;
 
     //单个checkbox对应的权重
-    private static double WEIGHT = 0, D_WEIGHT = 0;
+    private static int WEIGHT = 0, D_WEIGHT = 0;
     private static double AMOUNT = 1;
-    private static double N = 0;
+    private static int N = 0;
     private static double MonetaryUnit = 2;
 
     private String modeName;
@@ -176,10 +177,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             public void onAmountChange(View view, int amount) {
                 AMOUNT = amount;
                 beiShu.setText(amount + "倍");
+
                 if (N == 0) {
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    double result = Arith.mul(Arith.mul(WEIGHT, MonetaryUnit), AMOUNT);
+                    jinE.setText("金额" + result + "元");
                 } else {
-                    jinE.setText("金额" + N * MonetaryUnit * AMOUNT + "元");
+                    double result = Arith.mul(Arith.mul(N, MonetaryUnit), AMOUNT);
+                    jinE.setText("金额" + result + "元");
                 }
             }
         });
@@ -380,8 +384,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 recyclerAdapter.removeDate(position);
                                 N = N - 1;
-                                zhuShu.setText("共" + N + "注");
-                                jinE.setText("金额" + N * MonetaryUnit * AMOUNT + "元");
+                                getResultWithN();
                             }
                         }).show().getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY);
             }
@@ -852,8 +855,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         }
                         recyclerAdapter.onrefresh(list);
                         N = list.size();
-                        zhuShu.setText("共" + N + "注");
-                        jinE.setText("金额" + N * MonetaryUnit * AMOUNT + "元");
+                        getResultWithN();
                     }
                 } else if (modeName.equals("三不同号")) {
                     if (WEIGHT < 3) {
@@ -878,11 +880,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             arrayList.add("6");
                         }
 
-                        N = ZuHeMethod.combination(arrayList.size(), 3);
+                        N = (int) ZuHeMethod.combination(arrayList.size(), 3);
                         list = ZuHeMethod.combinationSelect(arrayList.toArray(new String[arrayList.size()]), 3);
                         recyclerAdapter.onrefresh(list);
-                        zhuShu.setText("共" + N + "注");
-                        jinE.setText("金额" + N * MonetaryUnit * AMOUNT + "元");
+                        getResultWithN();
                     }
 
 
@@ -908,11 +909,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         if (SIX != 0) {
                             arrayList.add("6");
                         }
-                        N = ZuHeMethod.combination(arrayList.size(), 2);
+                        N = (int) ZuHeMethod.combination(arrayList.size(), 2);
                         list = ZuHeMethod.combinationSelect(arrayList.toArray(new String[arrayList.size()]), 2);
                         recyclerAdapter.onrefresh(list);
-                        zhuShu.setText("共" + N + "注");
-                        jinE.setText("金额" + N * MonetaryUnit * AMOUNT + "元");
+                        getResultWithN();
                     }
                 }
                 break;
@@ -946,6 +946,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+    //不需要进行数字组合的情况下 计算 元 角 情况下不同的金额
+    public void getResultWithWeight() {
+        double result = Arith.mul(Arith.mul(WEIGHT, MonetaryUnit), AMOUNT);
+        zhuShu.setText("共" + WEIGHT + "注");
+        jinE.setText("金额" + result + "元");
+    }
+
+    //需要进行数字组合的情况下 计算 元 角 情况下不同的金额
+    public void getResultWithN() {
+        double result = Arith.mul(Arith.mul(N, MonetaryUnit), AMOUNT);
+        zhuShu.setText("共" + N + "注");
+        jinE.setText("金额" + result + "元");
+    }
+
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
@@ -953,9 +967,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     MonetaryUnit = 2;
                     if (N == 0) {
-                        jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                        double result = Arith.mul(Arith.mul(WEIGHT, MonetaryUnit), AMOUNT);
+                        jinE.setText("金额" + result + "元");
                     } else {
-                        jinE.setText("金额" + N * MonetaryUnit * AMOUNT + "元");
+                        double result = Arith.mul(Arith.mul(N, MonetaryUnit), AMOUNT);
+                        jinE.setText("金额" + result + "元");
                     }
                 }
                 break;
@@ -963,23 +979,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     MonetaryUnit = 0.2;
                     if (N == 0) {
-                        jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                        double result = Arith.mul(Arith.mul(WEIGHT, MonetaryUnit), AMOUNT);
+                        jinE.setText("金额" + result + "元");
                     } else {
-                        jinE.setText("金额" + N * MonetaryUnit * AMOUNT + "元");
+                        double result = Arith.mul(Arith.mul(N, MonetaryUnit), AMOUNT);
+                        jinE.setText("金额" + result + "元");
                     }
                 }
                 break;
             case R.id.san_lian_hao_tong:
                 if (b) {
                     WEIGHT = 4;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
-
+                    getResultWithWeight();
                 } else {
                     WEIGHT = 0;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
-
+                    getResultWithWeight();
                 }
                 break;
             case R.id.er_tong_hao_one:
@@ -1096,8 +1110,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     THREE = 3;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Shuang.setTextColor(Color.parseColor("#607D8B"));
@@ -1106,8 +1119,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     THREE = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1118,8 +1130,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     FOUR = 4;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Dan.setTextColor(Color.parseColor("#607D8B"));
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1128,8 +1139,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     FOUR = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1141,8 +1151,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     FIVE = 5;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Shuang.setTextColor(Color.parseColor("#607D8B"));
@@ -1150,8 +1159,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     FIVE = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1162,17 +1170,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     SIX = 6;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
-
+                    getResultWithWeight();
                     Dan.setTextColor(Color.parseColor("#607D8B"));
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Qing.setTextColor(Color.parseColor("#607D8B"));
                 } else {
                     SIX = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1183,8 +1188,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     SEVEN = 7;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Shuang.setTextColor(Color.parseColor("#607D8B"));
@@ -1192,8 +1196,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     SEVEN = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1204,8 +1207,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     EIGHT = 8;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Dan.setTextColor(Color.parseColor("#607D8B"));
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1213,8 +1215,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     EIGHT = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1225,8 +1226,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     NINE = 9;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Shuang.setTextColor(Color.parseColor("#607D8B"));
@@ -1234,8 +1234,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     NINE = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1246,8 +1245,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     TEN = 10;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Dan.setTextColor(Color.parseColor("#607D8B"));
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1255,8 +1253,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     TEN = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1267,8 +1264,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     ELEVEN = 11;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Qing.setTextColor(Color.parseColor("#607D8B"));
@@ -1276,8 +1272,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     ELEVEN = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1288,8 +1283,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     TWELVE = 12;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Qing.setTextColor(Color.parseColor("#607D8B"));
@@ -1297,8 +1291,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     TWELVE = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Shuang.setTextColor(Color.parseColor("#607D8B"));
@@ -1309,8 +1302,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     THIRTEEN = 13;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Qing.setTextColor(Color.parseColor("#607D8B"));
@@ -1318,8 +1310,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     THIRTEEN = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1330,8 +1321,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     FOURTEEN = 14;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Qing.setTextColor(Color.parseColor("#607D8B"));
@@ -1339,8 +1329,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     FOURTEEN = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Shuang.setTextColor(Color.parseColor("#607D8B"));
@@ -1351,8 +1340,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     FIFTEEN = 15;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Qing.setTextColor(Color.parseColor("#607D8B"));
@@ -1360,8 +1348,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     FIFTEEN = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1372,8 +1359,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     SIXTEEN = 16;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Qing.setTextColor(Color.parseColor("#607D8B"));
@@ -1381,8 +1367,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     SIXTEEN = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Shuang.setTextColor(Color.parseColor("#607D8B"));
@@ -1393,8 +1378,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     SEVENTEEN = 17;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Qing.setTextColor(Color.parseColor("#607D8B"));
@@ -1402,8 +1386,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     SEVENTEEN = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
@@ -1414,8 +1397,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     EIGHTEEN = 18;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
                     Qing.setTextColor(Color.parseColor("#607D8B"));
@@ -1423,8 +1405,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     EIGHTEEN = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
+                    ;
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Shuang.setTextColor(Color.parseColor("#607D8B"));
@@ -1435,78 +1417,66 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     ONE = 1;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     ONE = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
             case R.id.fu_xuan_two:
                 if (b) {
                     TWO = 2;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     TWO = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
             case R.id.fu_xuan_three:
                 if (b) {
                     THREE = 3;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     THREE = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
             case R.id.fu_xuan_four:
                 if (b) {
                     FOUR = 4;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     FOUR = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
             case R.id.fu_xuan_five:
                 if (b) {
                     FIVE = 5;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     FIVE = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
             case R.id.fu_xuan_six:
                 if (b) {
                     SIX = 6;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     SIX = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
 
@@ -1514,78 +1484,66 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     ONE = 1;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     ONE = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
             case R.id.san_tong_hao_two:
                 if (b) {
                     TWO = 2;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     TWO = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
             case R.id.san_tong_hao_three:
                 if (b) {
                     THREE = 3;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     THREE = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
             case R.id.san_tong_hao_four:
                 if (b) {
                     FOUR = 4;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     FOUR = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
             case R.id.san_tong_hao_five:
                 if (b) {
                     FIVE = 5;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     FIVE = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
             case R.id.san_tong_hao_six:
                 if (b) {
                     SIX = 6;
                     WEIGHT = WEIGHT + 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 } else {
                     SIX = 0;
                     WEIGHT = WEIGHT - 1;
-                    zhuShu.setText("共" + WEIGHT + "注");
-                    jinE.setText("金额" + WEIGHT * MonetaryUnit * AMOUNT + "元");
+                    getResultWithWeight();
                 }
                 break;
 
