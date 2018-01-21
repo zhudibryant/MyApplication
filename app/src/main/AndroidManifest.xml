@@ -2,15 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.zhudi.myapplication">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <!--  <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-      <uses-permission android:name="android.permission.READ_PROFILE" />
-      <uses-permission android:name="android.permission.READ_CONTACTS" />-->
-
-    <!-- Include required permissions for Google Mobile Ads to run. -->
-    <!-- <uses-permission android:name="android.permission.INTERNET" />
-     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
-
     <!-- 网络授权 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -30,21 +21,14 @@
                 <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.LoginActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.ForgetPasswordActivity" />
         <activity android:name=".activity.ResetPassword" />
 
-        <!-- This meta-data tag is required to use Google Play Services. -->
-        <!--<meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />-->
         <!--OSChina 测试-->
-        <!--OS命令行测试成功-->
-        <!--<activity
-            android:name="com.google.android.gms.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@android:style/Theme.Translucent" />-->
+
         <activity
             android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustPan" />

@@ -32,7 +32,7 @@ public class RequestServer {
             if (code != 200){
                 return null;
             }
-            Log.e("chen", "code:" + code);
+            //Log.e("chen", "code:" + code);
             InputStream is = conn.getInputStream();
             //通过InputStream is 创建InputStreamReader对象
             InputStreamReader isr = new InputStreamReader(is, "utf-8");
