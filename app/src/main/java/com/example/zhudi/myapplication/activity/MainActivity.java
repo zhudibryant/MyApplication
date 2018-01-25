@@ -1,8 +1,11 @@
 package com.example.zhudi.myapplication.activity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -33,15 +36,22 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.example.zhudi.myapplication.R;
 import com.example.zhudi.myapplication.adapter.RecyclerAdapter;
+import com.example.zhudi.myapplication.bean.BjKRecordBean;
 import com.example.zhudi.myapplication.utils.Arith;
 import com.example.zhudi.myapplication.utils.Constant;
 import com.example.zhudi.myapplication.utils.ErTongHaoDanXuanMethod;
+import com.example.zhudi.myapplication.utils.RequestServer;
 import com.example.zhudi.myapplication.utils.Utils;
 import com.example.zhudi.myapplication.utils.ZuHeMethod;
 import com.example.zhudi.myapplication.view.AmountView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +81,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private RadioButton Yuan, Jiao;
 
+    private TextView prevNum,prevNumCode;
     private TextView Xiao, Da, Dan, Shuang, Quan, Qing;
     private TextView zhuShu, jinE, beiShu;
     private RecyclerView recyclerView;
@@ -86,7 +97,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private static int ONE, TWO, THREE, FOUR, FIVE, SIX;
     private static int D_ONE, D_TWO, D_THREE, D_FOUR, D_FIVE, D_SIX;
     private static int SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE, THIRTEEN, FOURTEEN, FIFTEEN, SIXTEEN, SEVENTEEN, EIGHTEEN;
-
+    private Handler mHandler = new Handler();
     //单个checkbox对应的权重
     private static int WEIGHT = 0, D_WEIGHT = 0;
     private static double AMOUNT = 1;
@@ -105,6 +116,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     List<String> list;
     private RecyclerAdapter recyclerAdapter;
 
+
     //在Toolbar显示menu必须声明的方法
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -121,7 +133,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void initView() {
 
-        Toolbar toolbarOfMain = (Toolbar) findViewById(R.id.toolBar);
+        final Toolbar toolbarOfMain = (Toolbar) findViewById(R.id.toolBar);
         toolbarOfMain.setTitle("快3");
         //此方法放在所有标题栏按钮事件函数的前面
         setSupportActionBar(toolbarOfMain);
@@ -145,6 +157,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 this, mDrawerLayout, toolbarOfMain, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
+
         NavigationView navigationView = findViewById(R.id.left_drawer);
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(
@@ -165,6 +178,49 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     }
             );
         }
+
+        //开奖内容区域控件获取
+        prevNum = findViewById(R.id.prev_num);
+        prevNumCode = findViewById(R.id.prev_num_code);
+
+        new Thread() {
+            @Override
+            public void run() {
+                String json = RequestServer.RequestServer(urlFormat);
+                Log.e("msg", "Main:" + json);
+                int code = 0;
+                String data = null;
+                try {
+                    JSONObject jsonObject = new JSONObject(json);
+                    code = jsonObject.optInt("code", 0);
+                    data = jsonObject.optString("data");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (code == 1) {
+                    List<BjKRecordBean> list = JSON.parseArray(data, BjKRecordBean.class);
+                    if (list != null && list.size() == 2) {
+                        final String NumNow = list.get(0).getNum();
+                        final String NumPrev = list.get(1).getNum();
+                        final String NumPrevCode = list.get(1).getOpencode();
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                prevNum.setText("第"+NumPrev+"期开奖号码");
+                                prevNumCode.setText(NumPrevCode);
+                                toolbarOfMain.setSubtitle("第"+NumNow+"期 进行中……");
+                            }
+                        });
+                        Log.e("msg", "size" + list.size());
+                        Log.e("msg", "numNow:" + NumNow + "---NumPrev:" + NumPrev);
+                    } else if (list != null && list.size() == 1){
+                        String NumNow = list.get(0).getNum();
+                    }
+                }
+
+
+            }
+        }.start();
 
         spinner = findViewById(R.id.spinner);
         initSpnner();
