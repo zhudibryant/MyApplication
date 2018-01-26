@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -43,6 +44,7 @@ import com.example.zhudi.myapplication.bean.BjKRecordBean;
 import com.example.zhudi.myapplication.utils.Arith;
 import com.example.zhudi.myapplication.utils.Constant;
 import com.example.zhudi.myapplication.utils.ErTongHaoDanXuanMethod;
+import com.example.zhudi.myapplication.utils.MyCountDownTimer;
 import com.example.zhudi.myapplication.utils.RequestServer;
 import com.example.zhudi.myapplication.utils.Utils;
 import com.example.zhudi.myapplication.utils.ZuHeMethod;
@@ -53,13 +55,64 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
-
+    private static final int GAINRECORDSUCCESS = 1;
+    private static final int GAINRECORDFAIL = 2;
     //网络请求
     private static String urlFormat = Constant.serverURL + "/bjk/start";
+
+    private MyHandler mHandler = new MyHandler(new WeakReference<Activity>(this));
+
+    private static class MyHandler extends Handler {
+        private WeakReference<Activity> wf;
+
+        public MyHandler(WeakReference<Activity> wf) {
+            this.wf = wf;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            final MainActivity activity = (MainActivity) wf.get();
+            if (activity == null)
+                return;
+            switch (msg.what) {
+                case GAINRECORDFAIL:
+                    Utils.alertShort(activity, "no-");
+                    break;
+                case GAINRECORDSUCCESS:
+                    List<BjKRecordBean> list = (List<BjKRecordBean>) msg.obj;
+                    Date serverTime = list.get(0).getServertime();
+                    Date endTime = list.get(0).getEndtime();
+                    long st = serverTime.getTime();
+                    long et = endTime.getTime();
+                    long reTime = (long) Arith.sub(et, st);
+
+                    new MyCountDownTimer(reTime, 1000) {
+
+                        @Override
+                        public void onTick(long l) {
+                            countDownTimer.setText(toClock(l));
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            activity.gainServerData();
+                        }
+                    }.start();
+                    Log.e("server", "time:" + serverTime + "end:" + endTime);
+                    Log.e("server", "st:" + st + "   et:" + et + "    sub:" + Arith.sub(et, st) + "   reTime:" + reTime);
+                    // Log.e("server","min:"++"  sec:" +);
+                    break;
+                default:
+
+            }
+        }
+    }
 
     private Spinner spinner;
     private LinearLayout sanTongHao;
@@ -81,7 +134,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private RadioButton Yuan, Jiao;
 
-    private TextView prevNum,prevNumCode;
+    private static TextView prevNum, prevNumCode;
+    private static TextView countDownTimer;
     private TextView Xiao, Da, Dan, Shuang, Quan, Qing;
     private TextView zhuShu, jinE, beiShu;
     private RecyclerView recyclerView;
@@ -97,7 +151,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private static int ONE, TWO, THREE, FOUR, FIVE, SIX;
     private static int D_ONE, D_TWO, D_THREE, D_FOUR, D_FIVE, D_SIX;
     private static int SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE, THIRTEEN, FOURTEEN, FIFTEEN, SIXTEEN, SEVENTEEN, EIGHTEEN;
-    private Handler mHandler = new Handler();
     //单个checkbox对应的权重
     private static int WEIGHT = 0, D_WEIGHT = 0;
     private static double AMOUNT = 1;
@@ -182,45 +235,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //开奖内容区域控件获取
         prevNum = findViewById(R.id.prev_num);
         prevNumCode = findViewById(R.id.prev_num_code);
+        //开奖倒计时
+        countDownTimer = findViewById(R.id.count_down_num);
 
-        new Thread() {
-            @Override
-            public void run() {
-                String json = RequestServer.RequestServer(urlFormat);
-                Log.e("msg", "Main:" + json);
-                int code = 0;
-                String data = null;
-                try {
-                    JSONObject jsonObject = new JSONObject(json);
-                    code = jsonObject.optInt("code", 0);
-                    data = jsonObject.optString("data");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (code == 1) {
-                    List<BjKRecordBean> list = JSON.parseArray(data, BjKRecordBean.class);
-                    if (list != null && list.size() == 2) {
-                        final String NumNow = list.get(0).getNum();
-                        final String NumPrev = list.get(1).getNum();
-                        final String NumPrevCode = list.get(1).getOpencode();
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                prevNum.setText("第"+NumPrev+"期开奖号码");
-                                prevNumCode.setText(NumPrevCode);
-                                toolbarOfMain.setSubtitle("第"+NumNow+"期 进行中……");
-                            }
-                        });
-                        Log.e("msg", "size" + list.size());
-                        Log.e("msg", "numNow:" + NumNow + "---NumPrev:" + NumPrev);
-                    } else if (list != null && list.size() == 1){
-                        String NumNow = list.get(0).getNum();
-                    }
-                }
-
-
-            }
-        }.start();
+        gainServerData();
 
         spinner = findViewById(R.id.spinner);
         initSpnner();
@@ -445,6 +463,70 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         }).show().getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY);
             }
         });
+    }
+
+    /**
+     * laqushuju
+     */
+    private void gainServerData() {
+        //创建recordBean实体 存储json数据
+        final BjKRecordBean recordBean = new BjKRecordBean();
+        final List<BjKRecordBean> timeList = new ArrayList<>();
+        new Thread() {
+            @Override
+            public void run() {
+                String json = RequestServer.RequestServer(urlFormat);
+                Log.e("msg", "Main:" + json);
+                int code = 0;
+                String data = null;
+                Date serverTime = null;
+                try {
+                    JSONObject jsonObject = new JSONObject(json);
+                    code = jsonObject.optInt("code", 0);
+                    data = jsonObject.optString("data");
+                    serverTime = JSON.parseObject(json).getDate("serverTime");
+                    //将serverTime放入recordBean
+                    recordBean.setServertime(serverTime);
+                    timeList.add(recordBean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (code == 1) {
+                    //success
+                    List<BjKRecordBean> list = JSON.parseArray(data, BjKRecordBean.class);
+                    if (list != null && list.size() == 2) {
+                        final String NumNow = list.get(0).getNum();
+                        Date endTime = list.get(0).getEndtime();
+                        //获取开奖时间 放入recordBean
+                        recordBean.setEndtime(endTime);
+                        timeList.add(recordBean);
+                        final String NumPrev = list.get(1).getNum();
+                        final String NumPrevCode = list.get(1).getOpencode();
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                prevNum.setText("第" + NumPrev + "期开奖号码");
+                                prevNumCode.setText(NumPrevCode);
+                            }
+                        });
+                    } else if (list != null && list.size() == 1) {
+                        String NumNow = list.get(0).getNum();
+                        Date endTime = list.get(0).getEndtime();
+                        //获取开奖时间 放入recordBean
+                        recordBean.setEndtime(endTime);
+                        timeList.add(recordBean);
+                    }
+                    Message msg = new Message();
+                    msg.what = GAINRECORDSUCCESS;
+                    msg.obj = timeList;
+                    mHandler.sendMessage(msg);
+                } else {
+                    //fail
+                    mHandler.sendEmptyMessage(GAINRECORDFAIL);
+                }
+
+            }
+        }.start();
     }
 
     @Override

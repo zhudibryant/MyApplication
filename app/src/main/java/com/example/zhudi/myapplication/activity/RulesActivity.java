@@ -21,6 +21,7 @@ public class RulesActivity extends BaseActivity {
         AddToolBar.addToolBar(this,"规则介绍","#2b566e");
 
         WebView webView = findViewById(R.id.web_view);
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl("http://39.104.53.208:8080/prophet/bjk/bjksintropage");
     }
 }
