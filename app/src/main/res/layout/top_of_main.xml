@@ -26,10 +26,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
-                android:text="第96877期开奖号码" />
+                tools:text="第96877期开奖号码"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:textSize="7pt"/>
 
             <TextView
                 android:id="@+id/prev_num_code"
@@ -37,7 +38,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
-                tools:text="123" />
+                tools:text="123"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"/>
         </LinearLayout>
 
         <LinearLayout
@@ -45,18 +49,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#5f2b566e"
+            android:background="@color/nav_header_color"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/count_down"
+                android:id="@+id/now_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="20dp"
                 android:textColor="@color/white"
-                android:text="第96878期开奖倒计时" />
+                tools:text="第96878期开奖倒计时"
+                android:textStyle="bold"
+                android:textSize="7pt"/>
 
             <TextView
                 android:id="@+id/count_down_num"
@@ -65,7 +71,9 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
                 tools:text="09:08:22"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -82,34 +82,63 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 return;
             switch (msg.what) {
                 case GAINRECORDFAIL:
-                    Utils.alertShort(activity, "no-");
+                    Utils.alertShort(activity, "网络请求失败");
                     break;
                 case GAINRECORDSUCCESS:
                     List<BjKRecordBean> list = (List<BjKRecordBean>) msg.obj;
                     Date serverTime = list.get(0).getServertime();
                     Date endTime = list.get(0).getEndtime();
+                    String openCode = list.get(0).getOpencode();
+                    final String numPrv = list.get(0).getNum();
+
+                    nowNum.setText("第" + (Long.parseLong(numPrv) + 1) + "投注倒计时");
+                    prevNum.setText("第" + numPrv + "期开奖结果");
                     long st = serverTime.getTime();
                     long et = endTime.getTime();
                     long reTime = (long) Arith.sub(et, st);
+                    //判断开奖结果是否为空，若为空，每隔6秒再次请求服务器
+                    if (openCode == null) {
+                        prevNumCode.setText("等待官方公布结果");
+                        new CountDownTimer(6000, 6000) {
+                            @Override
+                            public void onTick(long l) {
+                                //Do Nothing
+                            }
 
-                    new MyCountDownTimer(reTime, 1000) {
+                            @Override
+                            public void onFinish() {
+                                activity.gainServerData();
+                            }
+                        }.start();
+                    } else {
+                        prevNumCode.setText(openCode);
+                    }
 
-                        @Override
-                        public void onTick(long l) {
-                            countDownTimer.setText(toClock(l));
-                        }
+                    //判断时间是否小于4分钟，小于4分钟进入开奖倒计时，否则进入投注倒计时
+                    if (reTime <= 240000) {
+                        nowNum.setText("第" + (Long.parseLong(numPrv) + 1) + "开奖倒计时");
+                        activity.countDownForStopBet();
+                    } else {
+                        new MyCountDownTimer(reTime - 240000, 1000) {
 
-                        @Override
-                        public void onFinish() {
-                            activity.gainServerData();
-                        }
-                    }.start();
+                            @Override
+                            public void onTick(long l) {
+                                countDownTimer.setText(toClock(l));
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                nowNum.setText("第" + (Integer.parseInt(numPrv) + 1) + "开奖倒计时");
+                                activity.countDownForStopBet();
+                            }
+                        }.start();
+                    }
+
                     Log.e("server", "time:" + serverTime + "end:" + endTime);
                     Log.e("server", "st:" + st + "   et:" + et + "    sub:" + Arith.sub(et, st) + "   reTime:" + reTime);
-                    // Log.e("server","min:"++"  sec:" +);
                     break;
                 default:
-
+                    break;
             }
         }
     }
@@ -134,7 +163,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private RadioButton Yuan, Jiao;
 
-    private static TextView prevNum, prevNumCode;
+    private static TextView prevNum, prevNumCode, nowNum;
     private static TextView countDownTimer;
     private TextView Xiao, Da, Dan, Shuang, Quan, Qing;
     private TextView zhuShu, jinE, beiShu;
@@ -146,7 +175,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private ImageView Delete, Cart;
 
     private AmountView mAmountView;
-
+    //赏金
+    private static int RewardMoney_240, RewardMoney_80, RewardMoney_40, RewardMoney_25, RewardMoney_16, RewardMoney_15, RewardMoney_12, RewardMoney_10, RewardMoney_9, RewardMoney_8;
     //每个checkbox对应的静态数字变量
     private static int ONE, TWO, THREE, FOUR, FIVE, SIX;
     private static int D_ONE, D_TWO, D_THREE, D_FOUR, D_FIVE, D_SIX;
@@ -235,9 +265,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //开奖内容区域控件获取
         prevNum = findViewById(R.id.prev_num);
         prevNumCode = findViewById(R.id.prev_num_code);
+        //即将开奖期号
+        nowNum = findViewById(R.id.now_num);
         //开奖倒计时
         countDownTimer = findViewById(R.id.count_down_num);
 
+        //链接服务器，获取服务器时间，开奖时间，开奖结果等信息
         gainServerData();
 
         spinner = findViewById(R.id.spinner);
@@ -465,13 +498,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
 
+    private void countDownForStopBet() {
+        new MyCountDownTimer(240000, 1000) {
+            @Override
+            public void onTick(long l) {
+                countDownTimer.setText(toClock(l));
+            }
+
+            @Override
+            public void onFinish() {
+                gainServerData();
+            }
+        }.start();
+    }
+
     /**
-     * laqushuju
+     * 从服务器获取开奖信息（开奖时间，服务器时间，开奖结果
      */
     private void gainServerData() {
         //创建recordBean实体 存储json数据
         final BjKRecordBean recordBean = new BjKRecordBean();
-        final List<BjKRecordBean> timeList = new ArrayList<>();
+        final List<BjKRecordBean> BjkList = new ArrayList<>();
         new Thread() {
             @Override
             public void run() {
@@ -487,7 +534,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     serverTime = JSON.parseObject(json).getDate("serverTime");
                     //将serverTime放入recordBean
                     recordBean.setServertime(serverTime);
-                    timeList.add(recordBean);
+                    BjkList.add(recordBean);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -495,30 +542,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     //success
                     List<BjKRecordBean> list = JSON.parseArray(data, BjKRecordBean.class);
                     if (list != null && list.size() == 2) {
-                        final String NumNow = list.get(0).getNum();
                         Date endTime = list.get(0).getEndtime();
+
+                        String NumPrev = list.get(1).getNum();
+                        String NumPrevCode = list.get(1).getOpencode();
+
                         //获取开奖时间 放入recordBean
                         recordBean.setEndtime(endTime);
-                        timeList.add(recordBean);
-                        final String NumPrev = list.get(1).getNum();
-                        final String NumPrevCode = list.get(1).getOpencode();
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                prevNum.setText("第" + NumPrev + "期开奖号码");
-                                prevNumCode.setText(NumPrevCode);
-                            }
-                        });
+                        recordBean.setNum(NumPrev);
+                        recordBean.setOpencode(NumPrevCode);
+
+                        BjkList.add(recordBean);
+
                     } else if (list != null && list.size() == 1) {
                         String NumNow = list.get(0).getNum();
                         Date endTime = list.get(0).getEndtime();
+
                         //获取开奖时间 放入recordBean
+                        recordBean.setNum(NumNow);
                         recordBean.setEndtime(endTime);
-                        timeList.add(recordBean);
+                        BjkList.add(recordBean);
                     }
                     Message msg = new Message();
                     msg.what = GAINRECORDSUCCESS;
-                    msg.obj = timeList;
+                    msg.obj = BjkList;
                     mHandler.sendMessage(msg);
                 } else {
                     //fail
@@ -1248,6 +1295,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     THREE = 3;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_240 = 240;
                     getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1257,6 +1305,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     THREE = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_240 = 0;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1268,6 +1317,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     FOUR = 4;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_80 = 80;
                     getResultWithWeight();
 
                     Dan.setTextColor(Color.parseColor("#607D8B"));
@@ -1277,6 +1327,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     FOUR = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_80 = 0;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1289,6 +1340,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     FIVE = 5;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_40 = 40;
                     getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1297,6 +1349,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     FIVE = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_40 = 0;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1308,13 +1361,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     SIX = 6;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_25 = 25;
                     getResultWithWeight();
+
                     Dan.setTextColor(Color.parseColor("#607D8B"));
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Qing.setTextColor(Color.parseColor("#607D8B"));
                 } else {
                     SIX = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_25 = 0;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1326,6 +1382,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     SEVEN = 7;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_16 = 16;
                     getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1334,6 +1391,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     SEVEN = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_16 = 0;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1345,6 +1403,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     EIGHT = 8;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_12 = 12;
                     getResultWithWeight();
 
                     Dan.setTextColor(Color.parseColor("#607D8B"));
@@ -1353,6 +1412,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     EIGHT = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_12 = 0;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1364,6 +1424,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     NINE = 9;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_10 = 10;
                     getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1372,6 +1433,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     NINE = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_10 = 0;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1383,6 +1445,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     TEN = 10;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_9 = 9;
                     getResultWithWeight();
 
                     Dan.setTextColor(Color.parseColor("#607D8B"));
@@ -1391,6 +1454,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     TEN = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_9 = 0;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1402,6 +1466,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     ELEVEN = 11;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_9 = 9;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1410,6 +1475,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     ELEVEN = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_9 = 0;
                     getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1421,6 +1487,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     TWELVE = 12;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_10 = 10;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1429,6 +1496,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     TWELVE = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_10 = 0;
                     getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1440,6 +1508,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     THIRTEEN = 13;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_12 = 12;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1448,6 +1517,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     THIRTEEN = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_12 = 0;
                     getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1459,6 +1529,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     FOURTEEN = 14;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_16 = 16;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1467,6 +1538,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     FOURTEEN = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_16 = 0;
                     getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1478,6 +1550,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     FIFTEEN = 15;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_25 = 25;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1486,6 +1559,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     FIFTEEN = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_25 = 0;
                     getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1497,6 +1571,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     SIXTEEN = 16;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_40 = 40;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1505,6 +1580,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     SIXTEEN = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_40 = 0;
                     getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1516,6 +1592,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     SEVENTEEN = 17;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_80 = 80;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1524,6 +1601,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     SEVENTEEN = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_80 = 0;
                     getResultWithWeight();
 
                     Da.setTextColor(Color.parseColor("#607D8B"));
@@ -1535,6 +1613,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (b) {
                     EIGHTEEN = 18;
                     WEIGHT = WEIGHT + 1;
+                    RewardMoney_240 = 240;
                     getResultWithWeight();
 
                     Xiao.setTextColor(Color.parseColor("#607D8B"));
@@ -1543,6 +1622,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 } else {
                     EIGHTEEN = 0;
                     WEIGHT = WEIGHT - 1;
+                    RewardMoney_240 = 0;
                     getResultWithWeight();
                     ;
 

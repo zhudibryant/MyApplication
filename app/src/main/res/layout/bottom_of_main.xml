@@ -35,12 +35,6 @@
             android:layout_marginRight="8dp"
             tools:text="共0.000元" />
 
-        <TextView
-            android:id="@+id/max_prize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="奖金最高240元" />
-
     </LinearLayout>
 
     <LinearLayout
