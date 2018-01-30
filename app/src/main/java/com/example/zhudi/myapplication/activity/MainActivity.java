@@ -43,7 +43,9 @@ import com.example.zhudi.myapplication.adapter.RecyclerAdapter;
 import com.example.zhudi.myapplication.bean.BjKRecordBean;
 import com.example.zhudi.myapplication.utils.Arith;
 import com.example.zhudi.myapplication.utils.Constant;
+import com.example.zhudi.myapplication.utils.CurrentInTimeScope;
 import com.example.zhudi.myapplication.utils.ErTongHaoDanXuanMethod;
+import com.example.zhudi.myapplication.utils.GlobalParameters;
 import com.example.zhudi.myapplication.utils.MyCountDownTimer;
 import com.example.zhudi.myapplication.utils.RequestServer;
 import com.example.zhudi.myapplication.utils.Utils;
@@ -60,10 +62,15 @@ import java.util.List;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
     private static final int GAINRECORDSUCCESS = 1;
     private static final int GAINRECORDFAIL = 2;
+    private static final int OUTOFTIME = 0;
+    private static int CLOSE = 0;
+    private static String ISSUE;
     //网络请求
     private static String urlFormat = Constant.serverURL + "/bjk/start";
+    private static String postUrlFormat = Constant.serverURL + "/bjk/betting?" + "gameCategory=%d&userId=%s&gameType=%d&recordId=%s";
 
     private MyHandler mHandler = new MyHandler(new WeakReference<Activity>(this));
 
@@ -81,23 +88,44 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (activity == null)
                 return;
             switch (msg.what) {
+                case OUTOFTIME:
+                    prevNum.setText("尊敬的阁下：");
+                    prevNumCode.setText("现在是停奖期");
+                    nowNum.setText("第一期投注时间为：");
+                    countDownTimer.setText("早晨 09:00");
+                    //设置9点自动刷新网络请求
+                    // 获取系统时间距离投注时间9点0分3秒的秒数
+                    long remainTime = CurrentInTimeScope.getRemainTime(9, 0, 3);
+                    new CountDownTimer(remainTime * 1000, 1000) {
+                        @Override
+                        public void onTick(long l) {
+                            //Do nothing
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            activity.gainServerData();
+                        }
+                    }.start();
+                    break;
                 case GAINRECORDFAIL:
-                    Utils.alertShort(activity, "网络请求失败");
+                    Utils.alertShort(activity, "请检查·网络·或·手机时间·是否正常 ");
                     break;
                 case GAINRECORDSUCCESS:
                     List<BjKRecordBean> list = (List<BjKRecordBean>) msg.obj;
                     Date serverTime = list.get(0).getServertime();
                     Date endTime = list.get(0).getEndtime();
                     String openCode = list.get(0).getOpencode();
-                    final String numPrv = list.get(0).getNum();
+                    final String num = list.get(0).getNum();
+                    int recordType = list.get(0).getRecordType();
+                    //将期号赋值给全局变量ISSUE(期号)
+                    ISSUE = num;
 
-                    nowNum.setText("第" + (Long.parseLong(numPrv) + 1) + "投注倒计时");
-                    prevNum.setText("第" + numPrv + "期开奖结果");
                     long st = serverTime.getTime();
                     long et = endTime.getTime();
                     long reTime = (long) Arith.sub(et, st);
                     //判断开奖结果是否为空，若为空，每隔6秒再次请求服务器
-                    if (openCode == null) {
+                    if (openCode == null && recordType != 1) {
                         prevNumCode.setText("等待官方公布结果");
                         new CountDownTimer(6000, 6000) {
                             @Override
@@ -114,11 +142,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         prevNumCode.setText(openCode);
                     }
 
+                    if (recordType == 1 && openCode == null) {
+                        //第一期开奖 倒计时期号和开奖期号一致
+                        nowNum.setText("第" + num + "投注倒计时");
+                        prevNum.setText("早安，阁下");
+                        prevNumCode.setText("祝您好运！");
+                    } else {
+                        //第一期开奖之后
+                        nowNum.setText("第" + num + "投注倒计时");
+                        prevNum.setText("第" + (Long.parseLong(num) - 1) + "期开奖结果");
+                    }
+
                     //判断时间是否小于4分钟，小于4分钟进入开奖倒计时，否则进入投注倒计时
                     if (reTime <= 240000) {
-                        nowNum.setText("第" + (Long.parseLong(numPrv) + 1) + "开奖倒计时");
+                        CLOSE = 0;//需要1
+                        nowNum.setText("第" + num + "开奖倒计时");
                         activity.countDownForStopBet();
                     } else {
+                        CLOSE = 0;
                         new MyCountDownTimer(reTime - 240000, 1000) {
 
                             @Override
@@ -128,14 +169,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                             @Override
                             public void onFinish() {
-                                nowNum.setText("第" + (Integer.parseInt(numPrv) + 1) + "开奖倒计时");
+                                CLOSE = 0;//需要1
+                                nowNum.setText("第" + num + "开奖倒计时");
                                 activity.countDownForStopBet();
                             }
                         }.start();
                     }
 
-                    Log.e("server", "time:" + serverTime + "end:" + endTime);
-                    Log.e("server", "st:" + st + "   et:" + et + "    sub:" + Arith.sub(et, st) + "   reTime:" + reTime);
+                    //Log.e("server", "time:" + serverTime + "end:" + endTime);
+                    // Log.e("server", "st:" + st + "   et:" + et + "    sub:" + Arith.sub(et, st) + "   reTime:" + reTime);
                     break;
                 default:
                     break;
@@ -278,6 +320,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         //获取 AmountView mAmountView;
         mAmountView = findViewById(R.id.amount_view);
+        //设置最大倍数为1000
         mAmountView.setMax_amount(1000);
         mAmountView.setOnAmountChangeListener(new AmountView.OnAmountChangeListener() {
             @Override
@@ -493,13 +536,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                                 N = N - 1;
                                 getResultWithN();
                             }
-                        }).show().getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY);
+                        }).show().getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.DKGRAY);
             }
         });
     }
 
     private void countDownForStopBet() {
-        new MyCountDownTimer(240000, 1000) {
+        new MyCountDownTimer(240000+1050, 1000) {
             @Override
             public void onTick(long l) {
                 countDownTimer.setText(toClock(l));
@@ -539,26 +582,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     e.printStackTrace();
                 }
                 if (code == 1) {
-                    //success
+                    //请求到数据
                     List<BjKRecordBean> list = JSON.parseArray(data, BjKRecordBean.class);
                     if (list != null && list.size() == 2) {
                         Date endTime = list.get(0).getEndtime();
 
-                        String NumPrev = list.get(1).getNum();
+                        String NumNew = list.get(0).getNum();
                         String NumPrevCode = list.get(1).getOpencode();
 
                         //获取开奖时间 放入recordBean
                         recordBean.setEndtime(endTime);
-                        recordBean.setNum(NumPrev);
+                        recordBean.setNum(NumNew);
                         recordBean.setOpencode(NumPrevCode);
 
                         BjkList.add(recordBean);
 
                     } else if (list != null && list.size() == 1) {
+                        int recordType = list.get(0).getRecordType();
                         String NumNow = list.get(0).getNum();
                         Date endTime = list.get(0).getEndtime();
 
                         //获取开奖时间 放入recordBean
+                        recordBean.setRecordType(recordType);
                         recordBean.setNum(NumNow);
                         recordBean.setEndtime(endTime);
                         BjkList.add(recordBean);
@@ -567,8 +612,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     msg.what = GAINRECORDSUCCESS;
                     msg.obj = BjkList;
                     mHandler.sendMessage(msg);
+                } else if (CurrentInTimeScope.isCurrentInTimeScope(23, 50, 9, 0)) {
+                    //官方停奖期间
+                    mHandler.sendEmptyMessage(OUTOFTIME);
+
                 } else {
-                    //fail
+                    //请求数据为空，且不处于停奖期。可能网络异常或者手机时间不准
                     mHandler.sendEmptyMessage(GAINRECORDFAIL);
                 }
 
@@ -919,65 +968,96 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.confirm:
                 //ArrayList重置
                 arrayList.clear();
-                if (modeName.equals("和值")) {
-                    if (WEIGHT < 1) {
-                        Utils.alertShort(this, "请先选择和值号码");
-                    } else {
-                        if (THREE != 0) {
-                            arrayList.add("3");
-                        }
-                        if (FOUR != 0) {
-                            arrayList.add("4");
-                        }
-                        if (FIVE != 0) {
-                            arrayList.add("5");
-                        }
-                        if (SIX != 0) {
-                            arrayList.add("6");
-                        }
-                        if (SEVEN != 0) {
-                            arrayList.add("7");
-                        }
-                        if (EIGHT != 0) {
-                            arrayList.add("8");
-                        }
-                        if (NINE != 0) {
-                            arrayList.add("9");
-                        }
-                        if (TEN != 0) {
-                            arrayList.add("10");
-                        }
-                        if (ELEVEN != 0) {
-                            arrayList.add("11");
-                        }
-                        if (TWELVE != 0) {
-                            arrayList.add("12");
-                        }
-                        if (THIRTEEN != 0) {
-                            arrayList.add("13");
-                        }
-                        if (FOURTEEN != 0) {
-                            arrayList.add("14");
-                        }
-                        if (FIFTEEN != 0) {
-                            arrayList.add("15");
-                        }
-                        if (SIXTEEN != 0) {
-                            arrayList.add("16");
-                        }
-                        if (SEVENTEEN != 0) {
-                            arrayList.add("17");
-                        }
-                        if (EIGHTEEN != 0) {
-                            arrayList.add("18");
+                if (CLOSE == 1) {
+                    new AlertDialog.Builder(MainActivity.this).setTitle("尊敬的阁下:\n现在是封单时间，不能下注哦！")
+                            .setNegativeButton("好的,退下", null).show().getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.RED);
+                    return;
+                } else {
+
+                    if (modeName.equals("和值")) {
+                        if (WEIGHT < 1) {
+                            Utils.alertShort(this, "请先选择和值号码");
+                        } else {
+                            Thread t = new Thread() {
+                                @Override
+                                public void run() {
+                                    String url = String.format(postUrlFormat, 1, GlobalParameters.userID, 1, ISSUE);
+                                    Log.e("zhu","url_"+url);
+                                    String json = RequestServer.RequestServer(url);
+                                    Log.e("zhu", "json:" + json);
+                                    /*int code = 0;
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(json);
+                                        code = jsonObject.optInt("code");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (code == 1) {
+                                        //mHandler.sendEmptyMessage(REGISTERSUCCESS);
+                                    } else {
+                                        //mHandler.sendEmptyMessage(REGISTERFAIL);
+                                    }*/
+                                }
+                            };
+                            t.start();
+
+                            Log.e("zhu", "_" + GlobalParameters.userID);
+                            if (THREE != 0) {
+                                arrayList.add("3");
+                            }
+                            if (FOUR != 0) {
+                                arrayList.add("4");
+                            }
+                            if (FIVE != 0) {
+                                arrayList.add("5");
+                            }
+                            if (SIX != 0) {
+                                arrayList.add("6");
+                            }
+                            if (SEVEN != 0) {
+                                arrayList.add("7");
+                            }
+                            if (EIGHT != 0) {
+                                arrayList.add("8");
+                            }
+                            if (NINE != 0) {
+                                arrayList.add("9");
+                            }
+                            if (TEN != 0) {
+                                arrayList.add("10");
+                            }
+                            if (ELEVEN != 0) {
+                                arrayList.add("11");
+                            }
+                            if (TWELVE != 0) {
+                                arrayList.add("12");
+                            }
+                            if (THIRTEEN != 0) {
+                                arrayList.add("13");
+                            }
+                            if (FOURTEEN != 0) {
+                                arrayList.add("14");
+                            }
+                            if (FIFTEEN != 0) {
+                                arrayList.add("15");
+                            }
+                            if (SIXTEEN != 0) {
+                                arrayList.add("16");
+                            }
+                            if (SEVENTEEN != 0) {
+                                arrayList.add("17");
+                            }
+                            if (EIGHTEEN != 0) {
+                                arrayList.add("18");
+                            }
                         }
                     }
-                }
-                if (modeName.equals("二不同号") || modeName.equals("三不同号")) {
-                    if (list == null) {
-                        Utils.alertShort(this, "请您先组合号码");
-                    } else {
-                        //提交号码到服务器
+                    if (modeName.equals("二不同号") || modeName.equals("三不同号")) {
+                        if (list == null) {
+                            Utils.alertShort(this, "请您先组合号码");
+                        } else {
+                            //提交号码到服务器
+                        }
                     }
                 }
                 break;

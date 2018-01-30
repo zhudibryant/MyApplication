@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.zhudi.myapplication.R;
 import com.example.zhudi.myapplication.utils.Constant;
+import com.example.zhudi.myapplication.utils.GlobalParameters;
 import com.example.zhudi.myapplication.utils.RequestServer;
 import com.example.zhudi.myapplication.utils.Utils;
 
@@ -148,8 +149,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             JSONObject jsonObject = new JSONObject(json);
                             code = jsonObject.optInt("code");
                             msg = jsonObject.optString("msg");
-                            //Log.i("code","---"+code);
-                            //Log.i("msg","---"+msg);
+                            String  userId = jsonObject.getJSONObject("data").optString("userId");
+                            GlobalParameters.userID = userId;
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

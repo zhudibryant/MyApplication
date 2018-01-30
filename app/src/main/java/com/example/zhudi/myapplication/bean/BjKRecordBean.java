@@ -8,7 +8,9 @@ import java.util.Date;
  */
 
 public class BjKRecordBean implements Serializable{
+
     private long id;
+    private int recordType;
     private String num;
     private String opencode;
     private Date endtime,servertime;
@@ -20,6 +22,10 @@ public class BjKRecordBean implements Serializable{
     public void setId(long id) {
         this.id = id;
     }
+
+    public int getRecordType(){return recordType;}
+
+    public void setRecordType(int recordType){this.recordType = recordType;}
 
     public String getNum() {
         return num;
