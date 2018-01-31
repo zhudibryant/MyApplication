@@ -29,6 +29,7 @@
 
         <!--OSChina 测试-->
 
+        <!--GroupTest-->
         <activity
             android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustPan" />
