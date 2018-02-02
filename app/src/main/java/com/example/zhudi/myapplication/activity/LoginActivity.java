@@ -1,8 +1,9 @@
 package com.example.zhudi.myapplication.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,6 +31,12 @@ import java.lang.ref.WeakReference;
 /**
  * A login screen that offers login via email/password.
  */
+
+
+
+
+
+
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private static String TAG = "url";
@@ -50,6 +57,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private MyHandler mHandler = new MyHandler(new WeakReference<Activity>(this));
     private static final int LOGINSUCCESS = 1;
     private static final int LOGINFAIL = 0;
+    private static final int AUTOLOGIN = 2;   //乱加的，0和1被用了，只好用2
+
+
+
+
+
 
     private static class MyHandler extends Handler {
         private WeakReference<Activity> wf;
@@ -71,6 +84,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 case LOGINFAIL:
                     activity.loginFail();
                     break;
+                case AUTOLOGIN:
+                    activity.AutologinFail();   //也不知道为什么，跟着逻辑瞎几把乱加的 cc
+                    break;
                 default:
                     break;
             }
@@ -84,6 +100,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         initView();
 
+
     }
 
 
@@ -92,7 +109,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         //标题栏
         Toolbar toolBar = (Toolbar) findViewById(R.id.toolBar);
         toolBar.setTitle("登录");
-        toolBar.setBackgroundColor(Color.parseColor("#2b566e"));
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,6 +130,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         btnRegister.setOnClickListener(this);
         tvFindCode.setOnClickListener(this);
     }
+
+
+
+
+
 
     @Override
     public void onClick(View view) {
@@ -143,13 +164,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     public void run() {
                         String urlString = String.format(urlFormat, login, password);
                         String json = RequestServer.RequestServer(urlString);
-                        Log.i("json","---"+json);
+                        Log.i("json", "---" + json);
                         int code = 0;
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             code = jsonObject.optInt("code");
                             msg = jsonObject.optString("msg");
-                            String  userId = jsonObject.getJSONObject("data").optString("userId");
+                            String userId = jsonObject.getJSONObject("data").optString("userId");
                             GlobalParameters.userID = userId;
 
                         } catch (JSONException e) {
@@ -178,10 +199,27 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void loginSuccess() {
         Intent doLogin = new Intent(this, MainActivity.class);
         startActivity(doLogin);
+        //登录成功记录至本地 cc
+        SharedPreferences user = getSharedPreferences("name", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = user.edit();
+        editor.putString("inf", "yes");
+        editor.commit();
+        //登录成功后结束登录界面 cc
+        LoginActivity.this.finish();
+
     }
-    private void loginFail(){
+
+    private void loginFail() {
         tvMsg.setVisibility(View.VISIBLE);
         tvMsg.setText("登录失败，请核对您的账号和密码");
+    }
+
+    //自动登录失败提示 cc
+    private void AutologinFail() {
+        tvMsg.setVisibility(View.VISIBLE);
+        tvMsg.setText("自动登录失败，请重新输入账号和密码");
+        SharedPreferences use = getSharedPreferences("name", Context.MODE_PRIVATE);
+        use.edit().clear().commit();
     }
 
     @Override

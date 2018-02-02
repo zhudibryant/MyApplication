@@ -14,7 +14,7 @@ import com.example.zhudi.myapplication.R;
 public class AddToolBar {
     public static void addToolBar(final Activity activity, String s,String rgb){
         Toolbar toolBar = (Toolbar) activity.findViewById(R.id.toolBar);
-        toolBar.setBackgroundColor(Color.parseColor(rgb));
+        toolBar.setBackgroundColor(Color.parseColor("#d30111"));
         toolBar.setTitle(s);
 
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {

@@ -2,16 +2,22 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="@color/nav_header_color"
+    android:background="@drawable/backg"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/toux"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="30dp"/>
     <TextView
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="50dp"
-        android:text="王霸胆"
+        android:layout_marginLeft="120dp"
+        android:text="尼古拉斯赵四"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="30dp" />
+        android:textSize="20dp" />
 </FrameLayout>

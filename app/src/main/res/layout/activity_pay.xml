@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.zhudi.myapplication.activity.PayActivity">
+
+    <include layout="@layout/title_top_view"/>
+
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/in"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"/>
+
+    <EditText
+        android:id="@+id/jine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入充值金额(元)"
+        android:layout_margin="10dp"
+        android:inputType="number"
+        android:maxLength="7"
+        />
+    <Button
+        android:id="@+id/btn_payture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="确认充值"
+        android:layout_margin="10dp"
+        android:background="#d30111"
+        android:textColor="#ffffff"/>
+
+</LinearLayout>

@@ -1,30 +1,14 @@
 package com.example.zhudi.myapplication.utils;
 
-import android.os.CountDownTimer;
-
 /**
  * Created by ww on 2018/1/1.
  */
 
-public class MyCountDownTimer extends CountDownTimer {
-    public MyCountDownTimer(long millisInFuture, long countDownInterval) {
-        super(millisInFuture, countDownInterval);
-        // TODO Auto-generated constructor stub
-    }
-
-    @Override
-    public void onFinish() {
-        // TODO Auto-generated method stub
+public class FormatTimer {
+    private FormatTimer(){
 
     }
-
-    @Override
-    public void onTick(long arg0) {
-
-
-    }
-
-    public String toClock(long millisUntilFinished)
+    public static String toClock(long millisUntilFinished)
 
     {
         long hour = millisUntilFinished / (60 * 60 * 1000);

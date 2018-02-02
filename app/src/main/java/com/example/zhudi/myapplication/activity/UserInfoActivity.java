@@ -1,5 +1,6 @@
 package com.example.zhudi.myapplication.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,7 +13,7 @@ import com.example.zhudi.myapplication.utils.AddToolBar;
 public class UserInfoActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView ivAlipay;
-    private ImageView ivQA;
+    private ImageView ivQA,ivPay;
 
     private LinearLayout ContectUs;
     private LinearLayout rootView;
@@ -38,6 +39,8 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
 
         ivAlipay = (ImageView) findViewById(R.id.ivAlipay);
         ivQA = (ImageView) findViewById(R.id.ivQA);
+        ivPay = (ImageView) findViewById(R.id.ivPay);
+        ivPay.setOnClickListener(this);
 
         ContectUs = (LinearLayout) findViewById(R.id.ContectUs);
         tvContectUs = (TextView) findViewById(R.id.tvContectUs);
@@ -83,6 +86,10 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             //点击空白处隐藏绑定支付宝，绑微信，联系我们弹出的EditText
             case R.id.rootView:
                 ContectUs.setVisibility(View.GONE);
+                break;
+            case R.id.ivPay:
+                Intent intent = new Intent(this,PayActivity.class);
+                startActivity(intent);
                 break;
         }
     }

@@ -39,7 +39,6 @@ public class CartInforActivity extends AppCompatActivity {
     public void inintView(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
         toolbar.setTitle("出票单");
-        toolbar.setBackgroundColor(Color.parseColor("#2b566e"));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

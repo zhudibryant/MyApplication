@@ -1,9 +1,12 @@
 package com.example.zhudi.myapplication.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
@@ -12,8 +15,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -21,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,30 +31,29 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.zhudi.myapplication.R;
 import com.example.zhudi.myapplication.adapter.RecyclerAdapter;
 import com.example.zhudi.myapplication.bean.BjKRecordBean;
+import com.example.zhudi.myapplication.interfaces.TimerListener;
 import com.example.zhudi.myapplication.utils.Arith;
 import com.example.zhudi.myapplication.utils.Constant;
 import com.example.zhudi.myapplication.utils.CurrentInTimeScope;
 import com.example.zhudi.myapplication.utils.ErTongHaoDanXuanMethod;
+import com.example.zhudi.myapplication.utils.FormatTimer;
 import com.example.zhudi.myapplication.utils.GlobalParameters;
-import com.example.zhudi.myapplication.utils.MyCountDownTimer;
+import com.example.zhudi.myapplication.utils.NewCountDownTimer;
 import com.example.zhudi.myapplication.utils.RequestServer;
 import com.example.zhudi.myapplication.utils.Utils;
 import com.example.zhudi.myapplication.utils.ZuHeMethod;
 import com.example.zhudi.myapplication.view.AmountView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
@@ -71,7 +72,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     //网络请求
     private static String urlFormat = Constant.serverURL + "/bjk/start";
     private static String postUrlFormat = Constant.serverURL + "/bjk/betting?" + "gameCategory=%d&userId=%s&gameType=%d&recordId=%s";
-
+    private static NewCountDownTimer myDownTimer;
     private MyHandler mHandler = new MyHandler(new WeakReference<Activity>(this));
 
     private static class MyHandler extends Handler {
@@ -95,8 +96,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     countDownTimer.setText("早晨 09:00");
                     //设置9点自动刷新网络请求
                     // 获取系统时间距离投注时间9点0分3秒的秒数
-                    long remainTime = CurrentInTimeScope.getRemainTime(9, 0, 3);
-                    new CountDownTimer(remainTime * 1000, 1000) {
+                    final long remainTime = CurrentInTimeScope.getRemainTime(9, 0, 6);
+                    new CountDownTimer(remainTime * 1000, remainTime * 1000) {
                         @Override
                         public void onTick(long l) {
                             //Do nothing
@@ -123,7 +124,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                     long st = serverTime.getTime();
                     long et = endTime.getTime();
-                    long reTime = (long) Arith.sub(et, st);
+                    final long reTime = et - st;
                     //判断开奖结果是否为空，若为空，每隔6秒再次请求服务器
                     if (openCode == null && recordType != 1) {
                         prevNumCode.setText("等待官方公布结果");
@@ -157,27 +158,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     if (reTime <= 240000) {
                         CLOSE = 0;//需要1
                         nowNum.setText("第" + num + "开奖倒计时");
-                        activity.countDownForStopBet();
+                        activity.countDownForStopBet(reTime);
                     } else {
                         CLOSE = 0;
-                        new MyCountDownTimer(reTime - 240000, 1000) {
-
+                        //下注的6分钟倒计时
+                        //清楚已生成的6分钟计时器
+                        if (myDownTimer != null) {
+                            myDownTimer.exit();
+                        }
+                        myDownTimer = new NewCountDownTimer(reTime - 240000, 1000, new TimerListener() {
                             @Override
-                            public void onTick(long l) {
-                                countDownTimer.setText(toClock(l));
+                            public void myTimeTick(Long remaningTime) {
+                                countDownTimer.setText(FormatTimer.toClock(remaningTime));
+                                Log.e("zhu", "reTime111" + remaningTime);
                             }
 
                             @Override
-                            public void onFinish() {
-                                CLOSE = 0;//需要1
+                            public void myTimeFinish() {//6分钟倒计时结束，执行4分钟开奖倒计时
                                 nowNum.setText("第" + num + "开奖倒计时");
-                                activity.countDownForStopBet();
+                                activity.countDownForStopBet(240000);
                             }
-                        }.start();
+                        });
+                        myDownTimer.start();
                     }
-
-                    //Log.e("server", "time:" + serverTime + "end:" + endTime);
-                    // Log.e("server", "st:" + st + "   et:" + et + "    sub:" + Arith.sub(et, st) + "   reTime:" + reTime);
                     break;
                 default:
                     break;
@@ -225,7 +228,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private static int SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE, THIRTEEN, FOURTEEN, FIFTEEN, SIXTEEN, SEVENTEEN, EIGHTEEN;
     //单个checkbox对应的权重
     private static int WEIGHT = 0, D_WEIGHT = 0;
-    private static double AMOUNT = 1;
+    private static int AMOUNT = 1;
     private static int N = 0;
     private static double MonetaryUnit = 2;
 
@@ -295,6 +298,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                                     break;
                                 case R.id.nav_me:
                                     seeUserInfo();
+                                    break;
+                                case R.id.nav_logout:
+                                    //点击注销弹出提示框
+
+                                    AlertDialog.Builder alertbBuilder = new AlertDialog.Builder(MainActivity.this);
+                                    alertbBuilder.setTitle("提示").setMessage("确认退出登录？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //确定后要执行的语句
+                                            //清除登录记录状态并结束当前页面，跳转至登录界面 cc
+                                            SharedPreferences clean = getSharedPreferences("name", Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor haha = clean.edit();
+                                            haha.putString("inf", "no");
+                                            haha.commit();
+                                            seeLogin();
+                                            MainActivity.this.finish();
+
+                                        }
+                                    }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+
+                                        public void onClick(DialogInterface dialog, int which) {
+//取消后要执行的语句
+//取消
+                                            dialog.cancel();
+
+                                        }
+                                    }).create();
+                                    alertbBuilder.show();
                                     break;
                             }
                             mDrawerLayout.closeDrawers();
@@ -541,18 +574,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
 
-    private void countDownForStopBet() {
-        new MyCountDownTimer(240000+1050, 1000) {
+    private void countDownForStopBet(long rt) {
+        //判断是否有已生成的计时器，若有，清除已有计时器
+        if (myDownTimer != null) {
+            myDownTimer.exit();
+        }
+        myDownTimer = new NewCountDownTimer(rt, 1000, new TimerListener() {
             @Override
-            public void onTick(long l) {
-                countDownTimer.setText(toClock(l));
+            public void myTimeTick(Long remaningTime) {
+                countDownTimer.setText(FormatTimer.toClock(remaningTime));
             }
 
             @Override
-            public void onFinish() {
+            public void myTimeFinish() {
                 gainServerData();
             }
-        }.start();
+        });
+
+        myDownTimer.start();
     }
 
     /**
@@ -645,6 +684,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void seeRules() {
         Intent seeRules = new Intent(this, RulesActivity.class);
         startActivity(seeRules);
+    }
+
+    //跳转“登录”页面
+    private void seeLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     private void initSpnner() {
@@ -982,7 +1027,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                                 @Override
                                 public void run() {
                                     String url = String.format(postUrlFormat, 1, GlobalParameters.userID, 1, ISSUE);
-                                    Log.e("zhu","url_"+url);
+                                    Log.e("zhu", "url_" + url);
                                     String json = RequestServer.RequestServer(url);
                                     Log.e("zhu", "json:" + json);
                                     /*int code = 0;
@@ -1051,12 +1096,46 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                                 arrayList.add("18");
                             }
                         }
-                    }
-                    if (modeName.equals("二不同号") || modeName.equals("三不同号")) {
-                        if (list == null) {
-                            Utils.alertShort(this, "请您先组合号码");
+                    } else if (modeName.equals("二不同号")) {
+                        if (WEIGHT < 2) {
+                            Utils.alertShort(this, "请至少选择两个号码");
                         } else {
-                            //提交号码到服务器
+                            if (ONE != 0) {
+                                arrayList.add("1");
+                            }
+                            if (TWO != 0) {
+                                arrayList.add("2");
+                            }
+                            if (THREE != 0) {
+                                arrayList.add("3");
+                            }
+                            if (FOUR != 0) {
+                                arrayList.add("4");
+                            }
+                            if (FIVE != 0) {
+                                arrayList.add("5");
+                            }
+                            if (SIX != 0) {
+                                arrayList.add("6");
+                            }
+                            //注数
+                            if (N == 0) {
+                                N = (int) ZuHeMethod.combination(arrayList.size(), 2);
+                            }
+                            //扣款金额
+                            double result = Arith.mul(Arith.mul(N,MonetaryUnit),AMOUNT);
+                            getResultWithN();
+
+                            new AlertDialog.Builder(MainActivity.this).setTitle("投注确认")
+                                    .setMessage("共"+N+"注，"+AMOUNT+"倍，"+"投注金额："+result+"元")
+                                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            //进行相关数据提交
+                                        }
+                                    })
+                                    .setNegativeButton("取消",null).show();
+
                         }
                     }
                 }
@@ -1201,7 +1280,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                                     zhuShu.setText("共" + 0 + "注");
                                     jinE.setText("金额" + 0.0 + "元");
                                 }
-                            }).show().getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY);
+                            }).show();
 
                 }
                 break;
@@ -1902,5 +1981,48 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //界面恢复，访问服务器，获取-服务器时间--开奖结果- 等数据
+        gainServerData();
+        Log.e("zhu","Resume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (myDownTimer !=null){
+            myDownTimer.exit();
+        }
+        if (mHandler!=null){
+            mHandler.removeCallbacksAndMessages(null);
+        }
+        Log.e("zhu","Pause");
+    }
+
+    //监听返回键 cc
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+            alertBuilder.setTitle("阁下：").setMessage("确定要退出江湖吗？").setPositiveButton("是的", new DialogInterface.OnClickListener() {
+
+
+                public void onClick(DialogInterface dialog, int which) {
+                    //确定后要执行的语句
+                    //结束这个Activity
+                    MainActivity.this.finish();
+                }
+            }).setNegativeButton("续写传奇", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                //取消退出
+                    dialog.cancel();
+                }
+            }).create();
+            alertBuilder.show().getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.LTGRAY);
+        }
+        return true;
     }
 }

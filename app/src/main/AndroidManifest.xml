@@ -18,24 +18,45 @@
             android:theme="@style/ThemeSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER"></category>
+
+                <category
+                    android:name="android.intent.category.LAUNCHER"
+                    android:screenOrientation="portrait" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.ForgetPasswordActivity" />
-        <activity android:name=".activity.ResetPassword" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ForgetPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ResetPassword"
+            android:screenOrientation="portrait" />
 
-        <!--OSChina 测试-->
+        <!-- OSChina 测试 -->
+        <!-- 协作测试 -->
+        <!--在每一项中加入android:screenOrientation="portrait"属性，强制屏幕为纵向，避免横屏引起的BUG   cc -->
 
         <!--GroupTest-->
         <activity
             android:name=".activity.MainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.RulesActivity" />
-        <activity android:name=".activity.UserInfoActivity" />
-        <activity android:name=".activity.CartInforActivity"></activity>
+        <activity
+            android:name=".activity.UserInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CartInforActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PayActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@+id/top_of_main"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#ffffff">
 
     <LinearLayout
         android:id="@+id/bu_tong_hao"
@@ -20,7 +21,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/hao_ma"
-            android:textColor="#455A64"
+            android:textColor="#999999"
             android:textSize="18dp"
             android:textStyle="bold"
             android:typeface="monospace" />
@@ -126,7 +127,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/he_zhi"
-            android:textColor="#455A64"
+            android:textColor="#999999"
             android:textSize="18dp"
             android:textStyle="bold"
             android:typeface="monospace" />
@@ -466,7 +467,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/san_tong_hao"
-            android:textColor="#455A64"
+            android:textColor="#808080"
             android:textSize="18dp"
             android:textStyle="bold"
             android:typeface="monospace" />
@@ -478,8 +479,8 @@
 
             <CheckBox
                 android:id="@+id/san_tong_hao_one"
-                android:layout_width="45dp"
-                android:layout_height="40dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_sa_1"
                 android:button="@null" />
@@ -492,8 +493,8 @@
 
             <CheckBox
                 android:id="@+id/san_tong_hao_two"
-                android:layout_width="45dp"
-                android:layout_height="40dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_sa_2"
                 android:button="@null" />
@@ -506,8 +507,8 @@
 
             <CheckBox
                 android:id="@+id/san_tong_hao_three"
-                android:layout_width="45dp"
-                android:layout_height="40dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_sa_3"
                 android:button="@null" />
@@ -520,8 +521,8 @@
 
             <CheckBox
                 android:id="@+id/san_tong_hao_four"
-                android:layout_width="45dp"
-                android:layout_height="40dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_sa_4"
                 android:button="@null" />
@@ -534,8 +535,8 @@
 
             <CheckBox
                 android:id="@+id/san_tong_hao_five"
-                android:layout_width="45dp"
-                android:layout_height="40dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_sa_5"
                 android:button="@null" />
@@ -548,8 +549,8 @@
 
             <CheckBox
                 android:id="@+id/san_tong_hao_six"
-                android:layout_width="45dp"
-                android:layout_height="40dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_sa_6"
                 android:button="@null" />
@@ -577,7 +578,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/er_tong_hao"
-                android:textColor="#455A64"
+                android:textColor="#999999"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:typeface="monospace" />
@@ -687,7 +688,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/bu_tong_hao"
-                android:textColor="#455A64"
+                android:textColor="#999999"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:typeface="monospace" />
@@ -799,20 +800,20 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/fu_xuan"
-            android:textColor="#455A64"
+            android:textColor="#999999"
             android:textSize="18dp"
             android:textStyle="bold"
             android:typeface="monospace" />
 
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="65dp"
+            android:layout_height="42dp"
             android:layout_weight="1">
 
             <CheckBox
                 android:id="@+id/fu_xuan_one"
                 android:layout_width="42dp"
-                android:layout_height="65dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_f1"
                 android:button="@null"
@@ -821,13 +822,13 @@
 
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="65dp"
+            android:layout_height="42dp"
             android:layout_weight="1">
 
             <CheckBox
                 android:id="@+id/fu_xuan_two"
                 android:layout_width="42dp"
-                android:layout_height="65dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_f2"
                 android:button="@null"
@@ -836,13 +837,13 @@
 
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="65dp"
+            android:layout_height="42dp"
             android:layout_weight="1">
 
             <CheckBox
                 android:id="@+id/fu_xuan_three"
                 android:layout_width="42dp"
-                android:layout_height="65dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_f3"
                 android:button="@null"
@@ -851,13 +852,13 @@
 
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="65dp"
+            android:layout_height="42dp"
             android:layout_weight="1">
 
             <CheckBox
                 android:id="@+id/fu_xuan_four"
                 android:layout_width="42dp"
-                android:layout_height="65dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_f4"
                 android:button="@null"
@@ -866,13 +867,13 @@
 
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="65dp"
+            android:layout_height="42dp"
             android:layout_weight="1">
 
             <CheckBox
                 android:id="@+id/fu_xuan_five"
                 android:layout_width="42dp"
-                android:layout_height="65dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_f5"
                 android:button="@null"
@@ -881,13 +882,13 @@
 
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="65dp"
+            android:layout_height="42dp"
             android:layout_weight="1">
 
             <CheckBox
                 android:id="@+id/fu_xuan_six"
                 android:layout_width="42dp"
-                android:layout_height="65dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:background="@drawable/selector_f6"
                 android:button="@null"
@@ -911,7 +912,7 @@
             android:layout_marginRight="10dp"
             android:gravity="center"
             android:text="@string/san_lian_hao_tong_xuan"
-            android:textColor="#455A64"
+            android:textColor="#999999"
             android:textSize="18dp"
             android:textStyle="bold"
             android:typeface="monospace" />

@@ -16,11 +16,11 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="5dp"
-        android:background="#78909C"
+        android:background="#10d30111"
         android:gravity="center_vertical"
         android:paddingLeft="5dp"
         android:text="@string/tip_for_recycler"
-        android:textColor="@color/white" />
+        android:textColor="#707070" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

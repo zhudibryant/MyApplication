@@ -72,7 +72,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="3"
-                android:background="#546E7A"
+                android:background="#6d0008"
                 android:text="@string/btn_shaixuan"
                 android:textColor="@color/white" />
         </LinearLayout>
@@ -90,7 +90,7 @@
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="#78909C"
+                android:background="#a9000d"
                 android:text="@string/btn_zhuihao"
                 android:textColor="@color/white" />
 
