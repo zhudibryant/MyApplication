@@ -1703,6 +1703,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     Da.setTextColor(Color.parseColor("#607D8B"));
                     Shuang.setTextColor(Color.parseColor("#607D8B"));
                     Quan.setTextColor(Color.parseColor("#607D8B"));
+
                 }
                 break;
             case R.id.he_zhi_fifteen:
